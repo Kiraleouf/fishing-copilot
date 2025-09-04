@@ -40,6 +40,17 @@ class FishermanService(
     return session.sessionId
   }
 
+  fun checkSession(sessionId: UUID): Fisherman {
+    return sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }.fisherman
+  }
+
+  fun logout(sessionId: UUID) {
+    if (!sessionRepository.existsById(sessionId)) {
+      throw SessionNotFoundException()
+    }
+    sessionRepository.deleteById(sessionId)
+  }
+
   fun secretQuestion(login: String, answer: String?): String? {
     val fisherman = repository.findByUsername(login) ?: throw FishermanNotFoundException()
     if (answer == null) {
