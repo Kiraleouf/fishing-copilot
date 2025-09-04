@@ -4,6 +4,7 @@ import com.ggc.fishingcopilot.fisherman.model.dto.PasswordUpdateRequest
 import com.ggc.fishingcopilot.fisherman.model.dto.QuestionResponse
 import com.ggc.fishingcopilot.fisherman.model.dto.RegisterRequest
 import com.ggc.fishingcopilot.fisherman.model.dto.SignInRequest
+import com.ggc.fishingcopilot.fisherman.model.dto.SignInResponse
 import com.ggc.fishingcopilot.fisherman.service.FishermanService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -26,9 +27,9 @@ class FishermanController(private val fishermanService: FishermanService) {
 
   @PostMapping("/sign-in")
   @Operation(summary = "Sign in", description = "Authenticates a fisherman using username and password")
-  fun signIn(@RequestBody req: SignInRequest): ResponseEntity<Void> {
-    fishermanService.signIn(req.login, req.password)
-    return ResponseEntity.ok().build()
+  fun signIn(@RequestBody req: SignInRequest): ResponseEntity<SignInResponse> {
+    val sessionId = fishermanService.signIn(req.login, req.password)
+    return ResponseEntity.ok(SignInResponse(sessionId.toString()))
   }
 
   @GetMapping("/fisherman/{login}/secret-question")
