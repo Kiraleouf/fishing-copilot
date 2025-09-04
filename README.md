@@ -11,3 +11,19 @@ Pour lancer l'application :
 ```
 
 L'interface statique est disponible sur `http://localhost:8080/`.
+
+## Documentation API
+
+Une documentation OpenAPI est disponible après le démarrage de l'application :
+
+- Swagger UI : `http://localhost:8080/swagger-ui.html`
+- Spécification JSON : `http://localhost:8080/v3/api-docs`
+
+### Endpoints
+
+| Méthode | Chemin | Description |
+|---------|--------|-------------|
+| POST | `/register` | Enregistre un nouveau pêcheur |
+| POST | `/sign-in` | Authentifie un pêcheur |
+| GET | `/fisherman/{login}/secret-question` | Récupère la question secrète ou vérifie la réponse |
+| PATCH | `/fisherman/{login}/password` | Met à jour le mot de passe après validation de la réponse secrète |
