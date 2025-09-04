@@ -1,5 +1,8 @@
--- Initial schema
-CREATE TABLE example (
+CREATE TABLE fisherman (
     id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    secret_question VARCHAR(255) NOT NULL,
+    secret_answer VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
