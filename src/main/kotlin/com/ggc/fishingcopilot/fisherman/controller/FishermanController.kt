@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.UUID
 
 @RestController
 @Tag(name = "Fisherman", description = "Operations related to fisherman accounts")
@@ -60,6 +61,20 @@ class FishermanController(private val fishermanService: FishermanService) {
     @RequestBody req: PasswordUpdateRequest
   ): ResponseEntity<Void> {
     fishermanService.resetPassword(login, answer, req.newPassword)
+    return ResponseEntity.ok().build()
+  }
+
+  @GetMapping("/session/check")
+  @Operation(summary = "Check session", description = "Validates a user session and returns username")
+  fun checkSession(@RequestHeader("sessionId") sessionId: UUID): ResponseEntity<String> {
+    val fisherman = fishermanService.checkSession(sessionId)
+    return ResponseEntity.ok(fisherman.username)
+  }
+
+  @GetMapping("/fisherman/logout")
+  @Operation(summary = "Logout", description = "Removes the user session")
+  fun logout(@RequestHeader("sessionId") sessionId: UUID): ResponseEntity<Void> {
+    fishermanService.logout(sessionId)
     return ResponseEntity.ok().build()
   }
 }
