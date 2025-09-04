@@ -1,4 +1,4 @@
-package com.example.demo
+package com.ggc.fishingcopilot
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

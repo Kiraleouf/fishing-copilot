@@ -36,7 +36,7 @@
       const res = await fetch(`/fisherman/${login}/secret-question`);
       if (res.ok) {
         const data = await res.json();
-        document.getElementById('question').innerText = data.question;
+        document.getElementById('question').innerText = "question secrète: " + data.question;
         step1.style.display = 'none';
         step2.style.display = 'block';
       }

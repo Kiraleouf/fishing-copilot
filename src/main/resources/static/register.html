@@ -10,8 +10,8 @@
   <div class="container" style="max-width: 400px;">
     <form id="registerForm">
       <div class="mb-3">
-        <label for="login" class="form-label">Identifiant</label>
-        <input type="text" class="form-control" id="login" required />
+        <label for="username" class="form-label">Identifiant</label>
+        <input type="text" class="form-control" id="username" required />
       </div>
       <div class="mb-3">
         <label for="password" class="form-label">Mot de passe</label>
@@ -31,16 +31,16 @@
   <script>
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const login = document.getElementById('login').value;
+      const username = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const question = document.getElementById('question').value;
       const answer = document.getElementById('answer').value;
       await fetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ login, password, question, answer })
+        body: JSON.stringify({ username, password, question, answer })
       });
-      window.location.href = 'index.html';
+      //window.location.href = 'index.html';
     });
   </script>
 </body>
