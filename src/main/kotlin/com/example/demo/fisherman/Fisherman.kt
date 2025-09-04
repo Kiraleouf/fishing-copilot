@@ -6,10 +6,10 @@ import jakarta.persistence.*
 @Table(name = "fisherman")
 class Fisherman(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+    var id: Int = 0,
 
     @Column(unique = true, nullable = false)
-    var login: String = "",
+    var username: String = "",
 
     @Column(nullable = false)
     var password: String = "",
@@ -18,5 +18,8 @@ class Fisherman(
     var secretQuestion: String = "",
 
     @Column(name = "secret_answer", nullable = false)
-    var secretAnswer: String = ""
+    var secretAnswer: String = "",
+
+    @Column(name = "created_at", nullable = false)
+    var createdAt: java.time.LocalDateTime = java.time.LocalDateTime.now()
 )

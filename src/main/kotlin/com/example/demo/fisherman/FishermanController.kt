@@ -3,7 +3,6 @@ package com.example.demo.fisherman
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
-import jakarta.servlet.http.HttpSession
 
 @RestController
 class FishermanController(private val repository: FishermanRepository) {
@@ -11,7 +10,7 @@ class FishermanController(private val repository: FishermanRepository) {
     private val encoder = BCryptPasswordEncoder()
 
     data class RegisterRequest(
-        val login: String,
+        val username: String,
         val password: String,
         val question: String,
         val answer: String
@@ -19,11 +18,11 @@ class FishermanController(private val repository: FishermanRepository) {
 
     @PostMapping("/register")
     fun register(@RequestBody req: RegisterRequest): ResponseEntity<Void> {
-        if (repository.findByLogin(req.login) != null) {
+        if (repository.findByUsername(req.username) != null) {
             return ResponseEntity.status(409).build()
         }
         val fisherman = Fisherman(
-            login = req.login,
+            username = req.username,
             password = encoder.encode(req.password),
             secretQuestion = req.question,
             secretAnswer = encoder.encode(req.answer)
@@ -35,10 +34,9 @@ class FishermanController(private val repository: FishermanRepository) {
     data class SignInRequest(val login: String, val password: String)
 
     @PostMapping("/sign-in")
-    fun signIn(@RequestBody req: SignInRequest, session: HttpSession): ResponseEntity<Void> {
-        val fisherman = repository.findByLogin(req.login) ?: return ResponseEntity.status(401).build()
+    fun signIn(@RequestBody req: SignInRequest): ResponseEntity<Void> {
+        val fisherman = repository.findByUsername(req.login) ?: return ResponseEntity.status(401).build()
         return if (encoder.matches(req.password, fisherman.password)) {
-            session.setAttribute("user", fisherman.login)
             ResponseEntity.ok().build()
         } else {
             ResponseEntity.status(401).build()
@@ -52,7 +50,7 @@ class FishermanController(private val repository: FishermanRepository) {
         @PathVariable login: String,
         @RequestParam(required = false) answer: String?
     ): ResponseEntity<Any> {
-        val fisherman = repository.findByLogin(login) ?: return ResponseEntity.notFound().build()
+        val fisherman = repository.findByUsername(login) ?: return ResponseEntity.notFound().build()
         return if (answer == null) {
             ResponseEntity.ok(QuestionResponse(fisherman.secretQuestion))
         } else {
@@ -72,7 +70,7 @@ class FishermanController(private val repository: FishermanRepository) {
         @RequestParam answer: String,
         @RequestBody req: PasswordUpdateRequest
     ): ResponseEntity<Void> {
-        val fisherman = repository.findByLogin(login) ?: return ResponseEntity.notFound().build()
+        val fisherman = repository.findByUsername(login) ?: return ResponseEntity.notFound().build()
         if (!encoder.matches(answer, fisherman.secretAnswer)) {
             return ResponseEntity.status(401).build()
         }
