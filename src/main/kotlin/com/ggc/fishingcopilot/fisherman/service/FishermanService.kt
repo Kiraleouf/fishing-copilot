@@ -3,11 +3,17 @@ package com.ggc.fishingcopilot.fisherman.service
 import com.ggc.fishingcopilot.fisherman.FishermanRepository
 import com.ggc.fishingcopilot.fisherman.exception.*
 import com.ggc.fishingcopilot.fisherman.model.entity.Fisherman
+import com.ggc.fishingcopilot.session.UserSessionRepository
+import com.ggc.fishingcopilot.session.model.entity.UserSession
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
-class FishermanService(private val repository: FishermanRepository) {
+class FishermanService(
+  private val repository: FishermanRepository,
+  private val sessionRepository: UserSessionRepository
+) {
 
   private val encoder = BCryptPasswordEncoder()
 
@@ -24,11 +30,14 @@ class FishermanService(private val repository: FishermanRepository) {
     repository.save(fisherman)
   }
 
-  fun signIn(login: String, password: String) {
+  fun signIn(login: String, password: String): UUID {
     val fisherman = repository.findByUsername(login) ?: throw BadRequestException()
     if (!encoder.matches(password, fisherman.password)) {
       throw InvalidCredentialsException()
     }
+    val session = UserSession(fisherman = fisherman)
+    sessionRepository.save(session)
+    return session.sessionId
   }
 
   fun secretQuestion(login: String, answer: String?): String? {

@@ -12,6 +12,10 @@ data class SignInRequest(
   val password: String
 )
 
+data class SignInResponse(
+  val sessionId: String
+)
+
 data class QuestionResponse(
   val question: String
 )

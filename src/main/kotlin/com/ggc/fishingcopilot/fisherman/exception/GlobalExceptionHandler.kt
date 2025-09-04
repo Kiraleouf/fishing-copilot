@@ -23,4 +23,8 @@ class GlobalExceptionHandler {
   @ExceptionHandler(BadRequestException::class)
   fun handleBadRequest(ex: BadRequestException) =
     ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.message)
+
+  @ExceptionHandler(SessionNotFoundException::class)
+  fun handleSessionNotFound(ex: SessionNotFoundException) =
+    ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.message)
 }
