@@ -15,7 +15,7 @@ import jakarta.persistence.Table
 class FishingSession(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+    var id: Int = 0,
 
     @Column(nullable = false)
     var name: String = "",

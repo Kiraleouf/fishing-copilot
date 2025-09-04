@@ -5,6 +5,6 @@ data class CreateFishingSessionRequest(
 )
 
 data class FishingSessionResponse(
-    val id: Long,
+    val id: Int,
     val name: String
 )
