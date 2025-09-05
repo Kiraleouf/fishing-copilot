@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   async function validateSession() {
     if (!sessionId) return false;
-    const resp = await fetch('/session/check', { headers: { sessionId } });
+    const resp = await apiFetch('/session/check', { headers: { sessionId } });
     if (resp.ok) {
       const username = await resp.text();
       localStorage.setItem('login', username);
@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   async function getCurrentFishingSession() {
-    const resp = await fetch('/fishing-session/current', { headers: { sessionId } });
+    const resp = await apiFetch('/fishing-session/current', { headers: { sessionId } });
     if (resp.status === 200) {
       const data = await resp.json();
       localStorage.setItem('currentFishingSessionId', data.id);
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       e.preventDefault();
       const login = document.getElementById('login').value;
       const password = document.getElementById('password').value;
-      const resp = await fetch('/sign-in', {
+      const resp = await apiFetch('/sign-in', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ login, password }),
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-      await fetch('/fisherman/logout', { headers: { sessionId } });
+      await apiFetch('/fisherman/logout', { headers: { sessionId } });
       localStorage.removeItem('sessionId');
       localStorage.removeItem('login');
       localStorage.removeItem('currentFishingSessionId');
@@ -87,7 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     startBtn.addEventListener('click', async () => {
       const name = prompt('Nom de la session', 'sans nom') || 'sans nom';
-      const resp = await fetch('/fishing-session/create', {
+      const resp = await apiFetch('/fishing-session/create', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -149,7 +149,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         del.addEventListener('click', async () => {
           if (confirm('Supprimer cette canne ?')) {
-            await fetch(`/fishing-session/${current.id}/rod/${rod.id}`, {
+            await apiFetch(`/fishing-session/${current.id}/rod/${rod.id}`, {
               method: 'DELETE',
               headers: { sessionId },
             });
@@ -159,7 +159,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         minus.addEventListener('click', async () => {
           if (parseInt(count.textContent) > 0) {
-            const resp = await fetch(`/fishing-session/${current.id}/rod/${rod.id}/fish`, {
+            const resp = await apiFetch(`/fishing-session/${current.id}/rod/${rod.id}/fish`, {
               method: 'DELETE',
               headers: { sessionId },
             });
@@ -171,7 +171,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         plus.addEventListener('click', async () => {
-          const resp = await fetch(`/fishing-session/${current.id}/rod/${rod.id}/fish`, {
+          const resp = await apiFetch(`/fishing-session/${current.id}/rod/${rod.id}/fish`, {
             method: 'POST',
             headers: { sessionId },
           });
@@ -186,7 +186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         card.appendChild(del);
         rodContainer.appendChild(card);
       }
-      const rodsResp = await fetch(`/fishing-session/${current.id}/rods`, { headers: { sessionId } });
+      const rodsResp = await apiFetch(`/fishing-session/${current.id}/rods`, { headers: { sessionId } });
       if (rodsResp.ok) {
         const rods = await rodsResp.json();
         rods.forEach(createRodCard);
@@ -194,7 +194,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (addRodBtn) {
         addRodBtn.addEventListener('click', async () => {
-          const resp = await fetch(`/fishing-session/${current.id}/rods`, {
+          const resp = await apiFetch(`/fishing-session/${current.id}/rods`, {
             method: 'POST',
             headers: { sessionId },
           });
@@ -206,7 +206,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     closeBtn.addEventListener('click', async () => {
-      await fetch('/fishing-session/close', {
+      await apiFetch('/fishing-session/close', {
         method: 'POST',
         headers: { sessionId },
       });
