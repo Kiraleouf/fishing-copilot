@@ -3,6 +3,7 @@ package com.ggc.fishingcopilot.fishingsession.rod
 import com.ggc.fishingcopilot.fishingsession.FishingSessionRepository
 import com.ggc.fishingcopilot.fishingsession.rod.model.entity.FishingRod
 import com.ggc.fishingcopilot.fishingsession.rod.model.entity.Fish
+import com.ggc.fishingcopilot.fishingsession.rod.model.dto.RodResponse
 import com.ggc.fishingcopilot.session.UserSessionRepository
 import com.ggc.fishingcopilot.fisherman.exception.SessionNotFoundException
 import org.springframework.stereotype.Service
@@ -32,6 +33,17 @@ class FishingRodService(
             .filter { it.fisherman == session.fisherman }
             .orElseThrow { SessionNotFoundException() }
         rodRepository.deleteByIdAndFishingSessionId(rodId, fishingSession.id)
+    }
+
+    fun getRods(sessionId: UUID, fishingSessionId: Int): List<RodResponse> {
+        val session = sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }
+        val fishingSession = fishingSessionRepository.findById(fishingSessionId)
+            .filter { it.fisherman == session.fisherman }
+            .orElseThrow { SessionNotFoundException() }
+        return rodRepository.findAllByFishingSessionId(fishingSession.id).map { rod ->
+            val count = fishRepository.countByFishingRodId(rod.id)
+            RodResponse(rod.id, count)
+        }
     }
 
     fun addFish(sessionId: UUID, fishingSessionId: Int, rodId: Int): Int? {

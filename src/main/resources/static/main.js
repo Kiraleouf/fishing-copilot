@@ -186,13 +186,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         card.appendChild(del);
         rodContainer.appendChild(card);
       }
+      const rodsResp = await fetch(`/fishing-session/${current.id}/rods`, { headers: { sessionId } });
+      if (rodsResp.ok) {
+        const rods = await rodsResp.json();
+        rods.forEach(createRodCard);
+      }
 
-    if (addRodBtn) {
-      addRodBtn.addEventListener('click', async () => {
-        const resp = await fetch(`/fishing-session/${current.id}/rods`, {
-          method: 'POST',
-          headers: { sessionId },
-        });
+      if (addRodBtn) {
+        addRodBtn.addEventListener('click', async () => {
+          const resp = await fetch(`/fishing-session/${current.id}/rods`, {
+            method: 'POST',
+            headers: { sessionId },
+          });
         if (resp.ok) {
           const data = await resp.json();
           createRodCard(data);
