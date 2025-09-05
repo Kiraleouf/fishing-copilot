@@ -4,7 +4,6 @@ import com.ggc.fishingcopilot.fishingsession.model.dto.CreateFishingSessionReque
 import com.ggc.fishingcopilot.fishingsession.model.dto.FishingSessionResponse
 import com.ggc.fishingcopilot.fishingsession.rod.FishingRodService
 import com.ggc.fishingcopilot.fishingsession.rod.model.dto.RodResponse
-import com.ggc.fishingcopilot.fishingsession.rod.model.dto.UpdateRodRequest
 import com.ggc.fishingcopilot.fishingsession.service.FishingSessionService
 import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.ResponseEntity
@@ -49,20 +48,7 @@ class FishingSessionController(
         @PathVariable("sessionId") fishingSessionId: Int
     ): ResponseEntity<RodResponse> {
         val rod = rodService.addRod(sessionId, fishingSessionId)
-        return ResponseEntity.ok(RodResponse(rod.id, rod.fishCount))
-    }
-
-    @PatchMapping("/fishing-session/{sessionId}/rod/{rodId}")
-    @Operation(summary = "Update rod fish count", description = "Update the fish count of a rod")
-    fun updateRod(
-        @RequestHeader("sessionId") sessionId: UUID,
-        @PathVariable("sessionId") fishingSessionId: Int,
-        @PathVariable rodId: Int,
-        @RequestBody req: UpdateRodRequest
-    ): ResponseEntity<RodResponse> {
-        val rod = rodService.updateRod(sessionId, fishingSessionId, rodId, req.fishCount)
-            ?: return ResponseEntity.notFound().build()
-        return ResponseEntity.ok(RodResponse(rod.id, rod.fishCount))
+        return ResponseEntity.ok(RodResponse(rod.id, 0))
     }
 
     @DeleteMapping("/fishing-session/{sessionId}/rod/{rodId}")
@@ -74,5 +60,27 @@ class FishingSessionController(
     ): ResponseEntity<Void> {
         rodService.deleteRod(sessionId, fishingSessionId, rodId)
         return ResponseEntity.ok().build()
+    }
+
+    @PostMapping("/fishing-session/{sessionId}/rod/{rodId}/fish")
+    @Operation(summary = "Add fish", description = "Add a fish to the rod")
+    fun addFish(
+        @RequestHeader("sessionId") sessionId: UUID,
+        @PathVariable("sessionId") fishingSessionId: Int,
+        @PathVariable rodId: Int
+    ): ResponseEntity<RodResponse> {
+        val count = rodService.addFish(sessionId, fishingSessionId, rodId) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(RodResponse(rodId, count))
+    }
+
+    @DeleteMapping("/fishing-session/{sessionId}/rod/{rodId}/fish")
+    @Operation(summary = "Remove last fish", description = "Remove the last fish from the rod")
+    fun removeFish(
+        @RequestHeader("sessionId") sessionId: UUID,
+        @PathVariable("sessionId") fishingSessionId: Int,
+        @PathVariable rodId: Int
+    ): ResponseEntity<RodResponse> {
+        val count = rodService.removeFish(sessionId, fishingSessionId, rodId) ?: return ResponseEntity.notFound().build()
+        return ResponseEntity.ok(RodResponse(rodId, count))
     }
 }

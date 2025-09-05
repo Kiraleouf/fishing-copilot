@@ -1,0 +1,7 @@
+ALTER TABLE fishing_rod DROP COLUMN fish_count;
+
+CREATE TABLE fish (
+    id SERIAL PRIMARY KEY,
+    caught_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    rod_id INT NOT NULL REFERENCES fishing_rod(id) ON DELETE CASCADE
+);

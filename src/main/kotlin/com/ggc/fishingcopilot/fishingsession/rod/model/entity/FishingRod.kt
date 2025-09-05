@@ -1,7 +1,6 @@
 package com.ggc.fishingcopilot.fishingsession.rod.model.entity
 
 import com.ggc.fishingcopilot.fishingsession.model.entity.FishingSession
-import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -16,9 +15,6 @@ class FishingRod(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int = 0,
-
-    @Column(name = "fish_count", nullable = false)
-    var fishCount: Int = 0,
 
     @ManyToOne
     @JoinColumn(name = "session_id", nullable = false)
