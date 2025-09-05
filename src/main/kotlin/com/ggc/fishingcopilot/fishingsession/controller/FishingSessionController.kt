@@ -41,6 +41,16 @@ class FishingSessionController(
         return ResponseEntity.ok().build()
     }
 
+    @GetMapping("/fishing-session/{sessionId}/rods")
+    @Operation(summary = "List fishing rods", description = "List rods for the session")
+    fun listRods(
+        @RequestHeader("sessionId") sessionId: UUID,
+        @PathVariable("sessionId") fishingSessionId: Int
+    ): ResponseEntity<List<RodResponse>> {
+        val rods = rodService.getRods(sessionId, fishingSessionId)
+        return ResponseEntity.ok(rods)
+    }
+
     @PostMapping("/fishing-session/{sessionId}/rods")
     @Operation(summary = "Add fishing rod", description = "Add a fishing rod to the session")
     fun addRod(
