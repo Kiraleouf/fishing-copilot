@@ -28,6 +28,7 @@
       <button type="submit" class="btn btn-primary w-100">S'enregistrer</button>
     </form>
   </div>
+  <script src="utils.js"></script>
   <script>
     document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -35,12 +36,15 @@
       const password = document.getElementById('password').value;
       const question = document.getElementById('question').value;
       const answer = document.getElementById('answer').value;
-      await fetch('/register', {
+      const resp = await apiFetch('/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password, question, answer })
       });
-      //window.location.href = 'index.html';
+      if (resp.ok) {
+        showToast('compte correctement créer vous pouvez vous connecter', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+      }
     });
   </script>
 </body>

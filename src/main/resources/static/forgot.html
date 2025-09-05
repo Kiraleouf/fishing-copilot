@@ -28,12 +28,13 @@
       <button id="resetPassword" class="btn btn-primary w-100">Mettre à jour</button>
     </div>
   </div>
+  <script src="utils.js"></script>
   <script>
     const step1 = document.getElementById('step1');
     const step2 = document.getElementById('step2');
     document.getElementById('getQuestion').addEventListener('click', async () => {
       const login = document.getElementById('login').value;
-      const res = await fetch(`/fisherman/${login}/secret-question`);
+      const res = await apiFetch(`/fisherman/${login}/secret-question`);
       if (res.ok) {
         const data = await res.json();
         document.getElementById('question').innerText = "question secrète: " + data.question;
@@ -45,14 +46,17 @@
       const login = document.getElementById('login').value;
       const answer = document.getElementById('answer').value;
       const newPassword = document.getElementById('newPassword').value;
-      const verify = await fetch(`/fisherman/${login}/secret-question?answer=${encodeURIComponent(answer)}`);
+      const verify = await apiFetch(`/fisherman/${login}/secret-question?answer=${encodeURIComponent(answer)}`);
       if (!verify.ok) return;
-      await fetch(`/fisherman/${login}/password?answer=${encodeURIComponent(answer)}`, {
+      const resp = await apiFetch(`/fisherman/${login}/password?answer=${encodeURIComponent(answer)}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ newPassword })
       });
-      window.location.href = 'index.html';
+      if (resp.ok) {
+        showToast('Mot de passe mis à jour', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+      }
     });
   </script>
 </body>
