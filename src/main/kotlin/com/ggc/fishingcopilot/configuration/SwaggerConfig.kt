@@ -1,4 +1,4 @@
-package com.ggc.fishingcopilot
+package com.ggc.fishingcopilot.configuration
 
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.info.Info
@@ -16,4 +16,3 @@ class SwaggerConfig {
             .version("1.0")
     )
 }
-

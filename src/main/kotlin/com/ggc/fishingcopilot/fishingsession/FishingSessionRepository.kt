@@ -5,6 +5,6 @@ import com.ggc.fishingcopilot.fishingsession.model.entity.FishingSessionStatus
 import com.ggc.fishingcopilot.fisherman.model.entity.Fisherman
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface FishingSessionRepository : JpaRepository<FishingSession, Long> {
+interface FishingSessionRepository : JpaRepository<FishingSession, Int> {
     fun findFirstByFishermanAndStatus(fisherman: Fisherman, status: FishingSessionStatus): FishingSession?
 }
