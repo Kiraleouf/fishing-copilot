@@ -6,6 +6,7 @@ import com.ggc.fishingcopilot.fishingsession.rod.model.entity.Fish
 import com.ggc.fishingcopilot.session.UserSessionRepository
 import com.ggc.fishingcopilot.fisherman.exception.SessionNotFoundException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.UUID
 
 @Service
@@ -24,6 +25,7 @@ class FishingRodService(
         return rodRepository.save(rod)
     }
 
+    @Transactional
     fun deleteRod(sessionId: UUID, fishingSessionId: Int, rodId: Int) {
         val session = sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }
         val fishingSession = fishingSessionRepository.findById(fishingSessionId)
