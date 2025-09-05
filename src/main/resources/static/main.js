@@ -111,6 +111,77 @@ document.addEventListener('DOMContentLoaded', async () => {
       window.location.href = 'home.html';
       return;
     }
+
+    const rodContainer = document.getElementById('rodContainer');
+    const addRodBtn = document.getElementById('addRod');
+
+    function createRodCard(rod) {
+      const card = document.createElement('div');
+      card.className = 'card m-3 p-3 d-flex justify-content-between align-items-center';
+
+      const timer = document.createElement('span');
+      timer.textContent = '00:00';
+      timer.style.fontFamily = 'DS-Digital';
+      timer.className = 'display-6';
+
+      const counter = document.createElement('div');
+      counter.className = 'd-flex align-items-center';
+
+      const minus = document.createElement('button');
+      minus.className = 'btn btn-outline-secondary btn-sm';
+      minus.textContent = '-';
+
+      const count = document.createElement('span');
+      count.className = 'mx-2';
+      count.textContent = rod.fishCount;
+
+      const plus = document.createElement('button');
+      plus.className = 'btn btn-outline-secondary btn-sm';
+      plus.textContent = '+';
+
+      minus.addEventListener('click', async () => {
+        if (rod.fishCount > 0) {
+          rod.fishCount--;
+          count.textContent = rod.fishCount;
+          await fetch(`/fishing-session/${current.id}/rod/${rod.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', sessionId },
+            body: JSON.stringify({ fishCount: rod.fishCount }),
+          });
+        }
+      });
+
+      plus.addEventListener('click', async () => {
+        rod.fishCount++;
+        count.textContent = rod.fishCount;
+        await fetch(`/fishing-session/${current.id}/rod/${rod.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json', sessionId },
+          body: JSON.stringify({ fishCount: rod.fishCount }),
+        });
+      });
+
+      counter.appendChild(minus);
+      counter.appendChild(count);
+      counter.appendChild(plus);
+      card.appendChild(timer);
+      card.appendChild(counter);
+      rodContainer.appendChild(card);
+    }
+
+    if (addRodBtn) {
+      addRodBtn.addEventListener('click', async () => {
+        const resp = await fetch(`/fishing-session/${current.id}/rods`, {
+          method: 'POST',
+          headers: { sessionId },
+        });
+        if (resp.ok) {
+          const data = await resp.json();
+          createRodCard(data);
+        }
+      });
+    }
+
     closeBtn.addEventListener('click', async () => {
       await fetch('/fishing-session/close', {
         method: 'POST',
