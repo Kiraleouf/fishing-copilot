@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         card.appendChild(timer);
         card.appendChild(counter);
         card.appendChild(del);
-        rodContainer.appendChild(card);
+        rodContainer.insertBefore(card, addRodBtn.parentElement);
       }
       const rodsResp = await apiFetch(`/fishing-session/${current.id}/rods`, { headers: { sessionId } });
       if (rodsResp.ok) {
