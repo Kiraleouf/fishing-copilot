@@ -148,12 +148,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       function createRodCard(rod) {
         const card = document.createElement('div');
-        card.className = 'card m-3 p-3 d-flex align-items-center';
+        card.className = 'card m-3 p-3 d-flex align-items-center gap-3 w-100';
 
         const timer = document.createElement('span');
         timer.textContent = '00:00';
         timer.style.fontFamily = 'DS-Digital';
-        timer.className = 'display-5 me-3';
+        timer.className = 'display-5';
 
         const counter = document.createElement('div');
         counter.className = 'd-flex align-items-center bg-white rounded p-1 mx-auto';
