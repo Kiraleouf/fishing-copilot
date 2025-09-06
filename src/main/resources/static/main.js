@@ -132,6 +132,14 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (resolveTimerDialog) resolveTimerDialog(minutes);
     });
     function openTimerDialog(initial) {
+      if (timerMinutes.options.length === 0) {
+        for (let i = 1; i <= 180; i++) {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = i;
+          timerMinutes.appendChild(opt);
+        }
+      }
       timerMinutes.value = initial || 5;
       timerDialog.classList.remove('d-none');
       timerDialog.classList.add('d-flex');
@@ -143,14 +151,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         card.className = 'card m-3 p-3 d-flex align-items-center';
 
         const counter = document.createElement('div');
-        counter.className = 'd-flex align-items-center';
+        counter.className = 'd-flex align-items-center bg-white rounded p-1';
 
         const minus = document.createElement('button');
         minus.className = 'btn btn-outline-secondary btn-sm';
         minus.textContent = '-';
 
         const count = document.createElement('span');
-        count.className = 'mx-2';
+        count.className = 'mx-2 fw-bold';
         count.textContent = rod.fishCount;
 
         const plus = document.createElement('button');
@@ -167,7 +175,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         timer.className = 'display-5 flex-grow-1 text-center';
 
         const del = document.createElement('button');
-        del.className = 'btn btn-link text-danger ms-2';
+        del.className = 'btn btn-outline-danger ms-2';
         del.textContent = '🗑️';
 
         del.addEventListener('click', async () => {
@@ -201,6 +209,14 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (resp.ok) {
             const data = await resp.json();
             count.textContent = data.fishCount;
+            if (intervalId) {
+              clearInterval(intervalId);
+              intervalId = null;
+            }
+            remaining = duration;
+            updateTimerDisplay();
+            card.classList.remove('bg-success', 'blink', 'border', 'border-danger');
+            timer.classList.remove('text-danger');
           }
         });
 
@@ -235,6 +251,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         timer.addEventListener('click', async (e) => {
           e.stopPropagation();
+          if (intervalId && !confirm('Changer la durée du timer ?')) {
+            return;
+          }
           const minutes = await openTimerDialog(duration / 60);
           if (minutes) {
             duration = minutes * 60;
@@ -244,7 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
 
         card.addEventListener('click', () => {
-          if (!intervalId && duration > 0 && remaining === 0) {
+          if (!intervalId && duration > 0) {
             startCountdown();
           }
         });
