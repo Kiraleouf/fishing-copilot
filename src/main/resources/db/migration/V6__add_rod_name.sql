@@ -1,0 +1,2 @@
+ALTER TABLE fishing_rod
+    ADD COLUMN name VARCHAR(20) NOT NULL DEFAULT '';

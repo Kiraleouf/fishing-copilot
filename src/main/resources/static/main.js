@@ -149,7 +149,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       function createRodCard(rod) {
         const card = document.createElement('div');
-        card.className = 'card m-3 p-3 d-flex flex-row align-items-center gap-3';
+        card.className = 'card m-3 p-3 d-flex flex-column gap-3';
+
+        const nameEl = document.createElement('div');
+        nameEl.textContent = rod.name;
+        nameEl.className = 'fw-bold text-center fs-4';
+        card.appendChild(nameEl);
+
+        const row = document.createElement('div');
+        row.className = 'd-flex flex-row align-items-center gap-3';
 
         const timer = document.createElement('span');
         timer.textContent = '00:00';
@@ -271,9 +279,10 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         });
 
-        card.appendChild(timer);
-        card.appendChild(counter);
-        card.appendChild(del);
+        row.appendChild(timer);
+        row.appendChild(counter);
+        row.appendChild(del);
+        card.appendChild(row);
         rodContainer.insertBefore(card, addRodBtn.parentElement);
       }
       const rodsResp = await apiFetch(`/fishing-session/${current.id}/rods`, { headers: { sessionId } });
@@ -284,16 +293,20 @@ document.addEventListener('DOMContentLoaded', async () => {
 
       if (addRodBtn) {
         addRodBtn.addEventListener('click', async () => {
+          const count = rodContainer.querySelectorAll('.card').length;
+          let name = prompt('Nom de la canne', `canne #${count + 1}`) || `canne #${count + 1}`;
+          name = name.substring(0, 20);
           const resp = await apiFetch(`/fishing-session/${current.id}/rods`, {
             method: 'POST',
-            headers: { sessionId },
+            headers: { sessionId, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name }),
           });
-        if (resp.ok) {
-          const data = await resp.json();
-          createRodCard(data);
-        }
-      });
-    }
+          if (resp.ok) {
+            const data = await resp.json();
+            createRodCard(data);
+          }
+        });
+      }
 
     closeBtn.addEventListener('click', async () => {
       await apiFetch('/fishing-session/close', {
