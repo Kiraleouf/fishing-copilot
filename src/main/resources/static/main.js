@@ -1,6 +1,14 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const sessionId = localStorage.getItem('sessionId');
   const dingSound = new Audio('sound/ding.mp3');
+  function unlockSound() {
+    dingSound.play().then(() => {
+      dingSound.pause();
+      dingSound.currentTime = 0;
+    }).catch(() => {});
+  }
+  document.addEventListener('click', unlockSound, { once: true });
+  document.addEventListener('touchstart', unlockSound, { once: true });
 
   async function validateSession() {
     if (!sessionId) return false;
