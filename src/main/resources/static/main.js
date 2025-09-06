@@ -1,5 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
   const sessionId = localStorage.getItem('sessionId');
+  const dingSound = new Audio('sound/ding.mp3');
 
   async function validateSession() {
     if (!sessionId) return false;
@@ -245,6 +246,8 @@ document.addEventListener('DOMContentLoaded', async () => {
               card.classList.remove('bg-success', 'blink');
               card.classList.add('border', 'border-danger');
               timer.classList.add('text-danger');
+              dingSound.currentTime = 0;
+              dingSound.play();
             }
           }, 1000);
         }
