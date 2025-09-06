@@ -115,6 +115,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     const rodContainer = document.getElementById('rodContainer');
     const addRodBtn = document.getElementById('addRod');
 
+    const timerDialog = document.getElementById('timerDialog');
+    const timerMinutes = document.getElementById('timerMinutes');
+    const timerCancel = document.getElementById('timerCancel');
+    const timerOk = document.getElementById('timerOk');
+    let resolveTimerDialog;
+    timerCancel.addEventListener('click', () => {
+      timerDialog.classList.add('d-none');
+      timerDialog.classList.remove('d-flex');
+      if (resolveTimerDialog) resolveTimerDialog(null);
+    });
+    timerOk.addEventListener('click', () => {
+      const minutes = parseInt(timerMinutes.value);
+      timerDialog.classList.add('d-none');
+      timerDialog.classList.remove('d-flex');
+      if (resolveTimerDialog) resolveTimerDialog(minutes);
+    });
+    function openTimerDialog(initial) {
+      timerMinutes.value = initial || 5;
+      timerDialog.classList.remove('d-none');
+      timerDialog.classList.add('d-flex');
+      return new Promise(res => { resolveTimerDialog = res; });
+    }
+
       function createRodCard(rod) {
         const card = document.createElement('div');
         card.className = 'card m-3 p-3 d-flex align-items-center';
@@ -178,6 +201,51 @@ document.addEventListener('DOMContentLoaded', async () => {
           if (resp.ok) {
             const data = await resp.json();
             count.textContent = data.fishCount;
+          }
+        });
+
+        let duration = 0;
+        let remaining = 0;
+        let intervalId = null;
+
+        function updateTimerDisplay() {
+          const m = String(Math.floor(remaining / 60)).padStart(2, '0');
+          const s = String(remaining % 60).padStart(2, '0');
+          timer.textContent = `${m}:${s}`;
+        }
+
+        function startCountdown() {
+          remaining = duration;
+          updateTimerDisplay();
+          card.classList.add('bg-success', 'blink');
+          card.classList.remove('border-danger');
+          timer.classList.remove('text-danger');
+          intervalId = setInterval(() => {
+            remaining--;
+            updateTimerDisplay();
+            if (remaining <= 0) {
+              clearInterval(intervalId);
+              intervalId = null;
+              card.classList.remove('bg-success', 'blink');
+              card.classList.add('border', 'border-danger');
+              timer.classList.add('text-danger');
+            }
+          }, 1000);
+        }
+
+        timer.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          const minutes = await openTimerDialog(duration / 60);
+          if (minutes) {
+            duration = minutes * 60;
+            if (intervalId) clearInterval(intervalId);
+            startCountdown();
+          }
+        });
+
+        card.addEventListener('click', () => {
+          if (!intervalId && duration > 0 && remaining === 0) {
+            startCountdown();
           }
         });
 
