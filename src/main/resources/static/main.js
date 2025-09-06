@@ -150,8 +150,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         const card = document.createElement('div');
         card.className = 'card m-3 p-3 d-flex align-items-center';
 
+        const timer = document.createElement('span');
+        timer.textContent = '00:00';
+        timer.style.fontFamily = 'DS-Digital';
+        timer.className = 'display-5 me-3';
+
         const counter = document.createElement('div');
-        counter.className = 'd-flex align-items-center bg-white rounded p-1';
+        counter.className = 'd-flex align-items-center bg-white rounded p-1 mx-auto';
 
         const minus = document.createElement('button');
         minus.className = 'btn btn-outline-secondary btn-sm';
@@ -169,13 +174,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         counter.appendChild(count);
         counter.appendChild(plus);
 
-        const timer = document.createElement('span');
-        timer.textContent = '00:00';
-        timer.style.fontFamily = 'DS-Digital';
-        timer.className = 'display-5 flex-grow-1 text-center';
-
         const del = document.createElement('button');
-        del.className = 'btn btn-outline-danger ms-2';
+        del.className = 'btn btn-danger ms-auto';
         del.textContent = '🗑️';
 
         del.addEventListener('click', async () => {
@@ -268,8 +268,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         });
 
-        card.appendChild(counter);
         card.appendChild(timer);
+        card.appendChild(counter);
         card.appendChild(del);
         rodContainer.appendChild(card);
       }
