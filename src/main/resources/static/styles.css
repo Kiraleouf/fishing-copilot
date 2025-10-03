@@ -15,7 +15,7 @@ a:hover {
   min-height: 0;
   height: calc(100vh - 120px);
   scrollbar-width: thin;
-  scrollbar-color: rgba(76, 175, 80, 0.3) rgba(139, 69, 19, 0.1);
+  scrollbar-color: rgba(144, 169, 85, 0.4) rgba(82, 64, 41, 0.15);
 }
 
 #rodContainer::-webkit-scrollbar {
@@ -23,17 +23,17 @@ a:hover {
 }
 
 #rodContainer::-webkit-scrollbar-track {
-  background: rgba(139, 69, 19, 0.1);
+  background: rgba(82, 64, 41, 0.15);
   border-radius: 4px;
 }
 
 #rodContainer::-webkit-scrollbar-thumb {
-  background: rgba(76, 175, 80, 0.3);
+  background: rgba(144, 169, 85, 0.4);
   border-radius: 4px;
 }
 
 #rodContainer::-webkit-scrollbar-thumb:hover {
-  background: rgba(76, 175, 80, 0.5);
+  background: rgba(144, 169, 85, 0.6);
 }
 
 /* Animations */
@@ -74,10 +74,10 @@ a:hover {
 @keyframes glow {
   0%,
   100% {
-    box-shadow: 0 4px 20px rgba(52, 199, 89, 0.2);
+    box-shadow: 0 4px 20px rgba(139, 195, 74, 0.35);
   }
   50% {
-    box-shadow: 0 4px 30px rgba(52, 199, 89, 0.4);
+    box-shadow: 0 4px 30px rgba(139, 195, 74, 0.55);
   }
 }
 
@@ -91,14 +91,14 @@ a:hover {
   }
 }
 
-/* Rod Card Styles - Nature Design Inspired */
+/* Rod Card Styles - Forest & Earth Design */
 .rod-card {
-  background: rgba(40, 54, 24, 0.9);
-  border: 1px solid rgba(139, 69, 19, 0.2);
+  background: rgba(45, 62, 35, 0.94);
+  border: 1px solid rgba(101, 67, 33, 0.35);
   border-radius: 16px;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   backdrop-filter: blur(20px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
   height: 120px;
   display: flex;
   flex-direction: column;
@@ -107,12 +107,12 @@ a:hover {
 
 .rod-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-  border-color: rgba(76, 175, 80, 0.3);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+  border-color: rgba(139, 195, 74, 0.5);
 }
 
 .rod-card.timer-active {
-  border-color: #34c759;
+  border-color: #8bc34a;
   animation: glow 2s ease-in-out infinite;
 }
 
@@ -143,14 +143,14 @@ a:hover {
 }
 
 .rod-name-container {
-  background: rgba(76, 175, 80, 0.1);
-  border: 1px solid rgba(76, 175, 80, 0.3);
+  background: rgba(82, 64, 41, 0.15);
+  border: 1px solid rgba(107, 83, 52, 0.3);
   border-top: none;
   border-left: none;
   padding: 8px 12px;
   font-size: 14px;
   font-weight: 600;
-  color: #4caf50;
+  color: #c7b377;
   letter-spacing: 0.5px;
   height: 100%;
   display: flex;
@@ -160,15 +160,15 @@ a:hover {
 }
 
 .rod-delete-btn {
-  background: rgba(255, 59, 48, 0.1);
-  border: 1px solid rgba(255, 59, 48, 0.3);
+  background: rgba(121, 85, 72, 0.2);
+  border: 1px solid rgba(160, 82, 45, 0.45);
   border-top: none;
   border-right: none;
   padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #ff3b30;
+  color: #a0522d;
   font-size: 23px;
   font-weight: 300;
   cursor: pointer;
@@ -178,8 +178,8 @@ a:hover {
 }
 
 .rod-delete-btn:hover {
-  background: rgba(255, 59, 48, 0.2);
-  border-color: rgba(255, 59, 48, 0.5);
+  background: rgba(121, 85, 72, 0.35);
+  border-color: rgba(160, 82, 45, 0.7);
   transform: scale(1.1);
 }
 
@@ -197,8 +197,8 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: rgba(139, 69, 19, 0.1);
-  border: 1px solid rgba(139, 69, 19, 0.2);
+  background: rgba(139, 195, 74, 0.12);
+  border: 1px solid rgba(139, 195, 74, 0.3);
   border-radius: 12px;
   padding: 3px;
   gap: 3px;
@@ -207,7 +207,7 @@ a:hover {
 .counter-buttons {
   display: flex;
   align-items: center;
-  background: rgba(160, 82, 45, 0.2);
+  background: rgba(104, 159, 56, 0.2);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -234,27 +234,27 @@ a:hover {
 
 .plus-btn {
   border-radius: 0 8px 8px 0;
-  border-left: 1px solid rgba(139, 69, 19, 0.3);
+  border-left: 1px solid rgba(139, 195, 74, 0.4);
 }
 
 .counter-btn:hover {
-  background: rgba(139, 69, 19, 0.2);
+  background: rgba(139, 195, 74, 0.25);
 }
 
 .counter-btn:active {
-  background: rgba(139, 69, 19, 0.3);
+  background: rgba(139, 195, 74, 0.35);
   transform: scale(0.95);
 }
 
 .minus-btn:hover {
-  background: rgba(255, 59, 48, 0.2);
-  color: #ff3b30;
+  background: rgba(244, 67, 54, 0.25);
+  color: #f44336;
   transform: scale(1.05);
 }
 
 .plus-btn:hover {
-  background: rgba(52, 199, 89, 0.2);
-  color: #34c759;
+  background: rgba(76, 175, 80, 0.35);
+  color: #4caf50;
   transform: scale(1.05);
 }
 
@@ -275,26 +275,26 @@ a:hover {
   font-family: "DS-Digital", "Courier New", monospace;
   font-size: 32px;
   font-weight: 400;
-  color: #d4b896;
+  color: #c7b377;
   text-align: center;
   cursor: pointer;
   padding: 8px 16px;
   border-radius: 12px;
-  background: rgba(139, 69, 19, 0.1);
-  border: 1px solid rgba(139, 69, 19, 0.2);
+  background: rgba(82, 64, 41, 0.15);
+  border: 1px solid rgba(107, 83, 52, 0.3);
   transition: all 0.2s ease;
   letter-spacing: 2px;
 }
 
 .rod-timer:hover {
-  background: rgba(139, 69, 19, 0.15);
-  border-color: rgba(139, 69, 19, 0.3);
+  background: rgba(82, 64, 41, 0.25);
+  border-color: rgba(107, 83, 52, 0.4);
 }
 
 .timer-active .rod-timer {
-  color: #34c759;
-  border-color: rgba(52, 199, 89, 0.3);
-  background: rgba(52, 199, 89, 0.1);
+  color: #90a955;
+  border-color: rgba(144, 169, 85, 0.4);
+  background: rgba(144, 169, 85, 0.15);
 }
 
 .timer-expired .rod-timer {
@@ -304,15 +304,15 @@ a:hover {
 }
 
 .play-stop-btn {
-  background: rgba(76, 175, 80, 0.1);
-  border: 1px solid rgba(76, 175, 80, 0.3);
+  background: rgba(144, 169, 85, 0.15);
+  border: 1px solid rgba(144, 169, 85, 0.4);
   border-radius: 50%;
   width: 48px;
   height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #4caf50;
+  color: #90a955;
   font-size: 20px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
@@ -334,8 +334,8 @@ a:hover {
 }
 
 .play-stop-btn:hover {
-  background: rgba(76, 175, 80, 0.2);
-  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(144, 169, 85, 0.25);
+  border-color: rgba(144, 169, 85, 0.6);
   transform: scale(1.05);
 }
 
@@ -349,27 +349,185 @@ a:hover {
 }
 
 .timer-active .play-stop-btn {
-  background: rgba(139, 69, 19, 0.1);
-  border-color: rgba(139, 69, 19, 0.3);
-  color: #8b4513;
+  background: rgba(82, 64, 41, 0.15);
+  border-color: rgba(107, 83, 52, 0.4);
+  color: #6b5334;
 }
 
 .timer-active .play-stop-btn:hover {
-  background: rgba(139, 69, 19, 0.2);
-  border-color: rgba(139, 69, 19, 0.5);
+  background: rgba(82, 64, 41, 0.25);
+  border-color: rgba(107, 83, 52, 0.6);
   transform: scale(1.05);
 }
 
 /* Add Rod Button Enhancement */
 #addRod {
-  background: rgba(76, 175, 80, 0.1);
-  border: 2px dashed rgba(76, 175, 80, 0.3);
-  color: #4caf50;
+  background: rgba(144, 169, 85, 0.15);
+  border: 2px dashed rgba(144, 169, 85, 0.4);
+  color: #90a955;
   transition: all 0.3s ease;
 }
 
 #addRod:hover {
-  background: rgba(76, 175, 80, 0.2);
-  border-color: rgba(76, 175, 80, 0.5);
+  background: rgba(144, 169, 85, 0.25);
+  border-color: rgba(144, 169, 85, 0.6);
   transform: scale(1.05);
+}
+
+/* Timer Dialog - iOS Style Picker */
+#timerDialog {
+  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+.timer-dialog-content {
+  background: rgba(45, 62, 35, 0.95);
+  border: 1px solid rgba(101, 67, 33, 0.4);
+  border-radius: 20px;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  min-width: 320px;
+  padding: 24px;
+}
+
+.timer-dialog-title {
+  color: #c7b377;
+  font-size: 18px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+.time-picker-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  margin: 20px 0;
+  height: 200px;
+  position: relative;
+}
+
+.time-picker-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 70px;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.time-picker-scroll {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 80px 0;
+}
+
+.time-picker-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.time-picker-item {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 500;
+  color: rgba(248, 249, 250, 0.4);
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  scroll-snap-align: center;
+  cursor: pointer;
+  user-select: none;
+}
+
+.time-picker-item:hover {
+  color: rgba(248, 249, 250, 0.7);
+  transform: scale(1.05);
+}
+
+.time-picker-item.selected {
+  color: #c7b377;
+  font-size: 22px;
+  font-weight: 700;
+  transform: scale(1.15);
+  text-shadow: 0 0 8px rgba(199, 179, 119, 0.3);
+}
+
+.time-picker-item.near-selected {
+  color: rgba(248, 249, 250, 0.7);
+  font-size: 20px;
+  font-weight: 600;
+  transform: scale(1.05);
+}
+
+.time-picker-label {
+  font-size: 14px;
+  color: #90a955;
+  font-weight: 600;
+  margin-top: 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.selection-indicator {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 40px;
+  transform: translateY(-50%);
+  background: rgba(139, 195, 74, 0.1);
+  border: 1px solid rgba(139, 195, 74, 0.3);
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.timer-dialog-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  margin-top: 24px;
+}
+
+.timer-btn {
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timer-btn-cancel {
+  background: rgba(82, 64, 41, 0.2);
+  color: #c7b377;
+  border: 1px solid rgba(107, 83, 52, 0.4);
+}
+
+.timer-btn-cancel:hover {
+  background: rgba(82, 64, 41, 0.3);
+  border-color: rgba(107, 83, 52, 0.6);
+}
+
+.timer-btn-ok {
+  background: rgba(144, 169, 85, 0.2);
+  color: #90a955;
+  border: 1px solid rgba(144, 169, 85, 0.4);
+}
+
+.timer-btn-ok:hover {
+  background: rgba(144, 169, 85, 0.3);
+  border-color: rgba(144, 169, 85, 0.6);
 }

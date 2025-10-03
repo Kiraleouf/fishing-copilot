@@ -130,31 +130,134 @@ document.addEventListener("DOMContentLoaded", async () => {
     const addRodBtn = document.getElementById("addRod");
 
     const timerDialog = document.getElementById("timerDialog");
-    const timerMinutes = document.getElementById("timerMinutes");
+    const hourPicker = document.getElementById("hourPicker");
+    const minutePicker = document.getElementById("minutePicker");
+    const secondPicker = document.getElementById("secondPicker");
     const timerCancel = document.getElementById("timerCancel");
     const timerOk = document.getElementById("timerOk");
     let resolveTimerDialog;
+    let currentValues = { hours: 0, minutes: 5, seconds: 0 };
+
+    function initializePickers() {
+      // Générer les heures (0-23)
+      for (let i = 0; i <= 23; i++) {
+        const div = document.createElement("div");
+        div.className = "time-picker-item";
+        div.textContent = i.toString().padStart(2, "0");
+        div.dataset.value = i;
+        hourPicker.appendChild(div);
+      }
+
+      // Générer les minutes (0-59)
+      for (let i = 0; i <= 59; i++) {
+        const div = document.createElement("div");
+        div.className = "time-picker-item";
+        div.textContent = i.toString().padStart(2, "0");
+        div.dataset.value = i;
+        minutePicker.appendChild(div);
+      }
+
+      // Générer les secondes (0-59)
+      for (let i = 0; i <= 59; i++) {
+        const div = document.createElement("div");
+        div.className = "time-picker-item";
+        div.textContent = i.toString().padStart(2, "0");
+        div.dataset.value = i;
+        secondPicker.appendChild(div);
+      }
+
+      // Ajouter les event listeners pour le scroll
+      [hourPicker, minutePicker, secondPicker].forEach((picker) => {
+        picker.addEventListener("scroll", () => updateSelection(picker));
+        picker.addEventListener("click", (e) => {
+          if (e.target.classList.contains("time-picker-item")) {
+            const value = parseInt(e.target.dataset.value);
+            scrollToValue(picker, value);
+          }
+        });
+      });
+    }
+
+    function updateSelection(picker) {
+      const items = picker.querySelectorAll(".time-picker-item");
+      const containerRect = picker.getBoundingClientRect();
+      const centerY = containerRect.top + containerRect.height / 2;
+
+      let closestItem = null;
+      let closestDistance = Infinity;
+
+      items.forEach((item) => {
+        item.classList.remove("selected", "near-selected");
+        const itemRect = item.getBoundingClientRect();
+        const itemCenterY = itemRect.top + itemRect.height / 2;
+        const distance = Math.abs(centerY - itemCenterY);
+
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          closestItem = item;
+        }
+      });
+
+      if (closestItem) {
+        closestItem.classList.add("selected");
+        const value = parseInt(closestItem.dataset.value);
+
+        if (picker === hourPicker) currentValues.hours = value;
+        else if (picker === minutePicker) currentValues.minutes = value;
+        else if (picker === secondPicker) currentValues.seconds = value;
+
+        // Marquer les éléments proches
+        const index = Array.from(items).indexOf(closestItem);
+        if (items[index - 1]) items[index - 1].classList.add("near-selected");
+        if (items[index + 1]) items[index + 1].classList.add("near-selected");
+      }
+    }
+
+    function scrollToValue(picker, value) {
+      const items = picker.querySelectorAll(".time-picker-item");
+      const targetItem = Array.from(items).find(
+        (item) => parseInt(item.dataset.value) === value
+      );
+      if (targetItem) {
+        const itemHeight = 40;
+        const scrollTop = value * itemHeight;
+        picker.scrollTop = scrollTop;
+        setTimeout(() => updateSelection(picker), 100);
+      }
+    }
+
+    function setInitialValues(totalMinutes) {
+      currentValues.hours = Math.floor(totalMinutes / 60);
+      currentValues.minutes = totalMinutes % 60;
+      currentValues.seconds = 0;
+
+      scrollToValue(hourPicker, currentValues.hours);
+      scrollToValue(minutePicker, currentValues.minutes);
+      scrollToValue(secondPicker, currentValues.seconds);
+    }
+
     timerCancel.addEventListener("click", () => {
       timerDialog.classList.add("d-none");
       timerDialog.classList.remove("d-flex");
       if (resolveTimerDialog) resolveTimerDialog(null);
     });
+
     timerOk.addEventListener("click", () => {
-      const minutes = parseInt(timerMinutes.value);
+      const totalMinutes =
+        currentValues.hours * 60 +
+        currentValues.minutes +
+        (currentValues.seconds > 0 ? 1 : 0);
       timerDialog.classList.add("d-none");
       timerDialog.classList.remove("d-flex");
-      if (resolveTimerDialog) resolveTimerDialog(minutes);
+      // Retourner au moins 1 minute si tout est à 0
+      if (resolveTimerDialog) resolveTimerDialog(Math.max(1, totalMinutes));
     });
+
     function openTimerDialog(initial) {
-      if (timerMinutes.options.length === 0) {
-        for (let i = 1; i <= 180; i++) {
-          const opt = document.createElement("option");
-          opt.value = i;
-          opt.textContent = i;
-          timerMinutes.appendChild(opt);
-        }
+      if (hourPicker.children.length === 0) {
+        initializePickers();
       }
-      timerMinutes.value = initial || 5;
+      setInitialValues(initial || 5);
       timerDialog.classList.remove("d-none");
       timerDialog.classList.add("d-flex");
       return new Promise((res) => {
@@ -176,7 +279,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const deleteBtn = document.createElement("button");
       deleteBtn.className = "rod-delete-btn";
-      deleteBtn.innerHTML = "×";
+      deleteBtn.innerHTML = "&times;";
 
       header.appendChild(nameContainer);
       header.appendChild(deleteBtn);
@@ -194,11 +297,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const minus = document.createElement("button");
       minus.className = "counter-btn minus-btn";
-      minus.textContent = "−";
+      minus.innerHTML = "−";
 
       const plus = document.createElement("button");
       plus.className = "counter-btn plus-btn";
-      plus.textContent = "+";
+      plus.innerHTML = "+";
 
       counterButtons.appendChild(minus);
       counterButtons.appendChild(plus);
@@ -324,8 +427,9 @@ document.addEventListener("DOMContentLoaded", async () => {
           return;
         }
         const minutes = await openTimerDialog(duration / 60);
-        if (minutes) {
+        if (minutes !== null && minutes > 0) {
           duration = minutes * 60;
+          remaining = duration; // Mettre à jour le temps restant
           if (intervalId) stopCountdown();
           updateTimerDisplay();
         }
@@ -335,8 +439,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (duration === 0) {
           // Si pas de durée définie, ouvrir le dialog
           openTimerDialog(5).then((minutes) => {
-            if (minutes) {
+            if (minutes !== null && minutes > 0) {
               duration = minutes * 60;
+              remaining = duration; // Initialiser le temps restant
+              updateTimerDisplay(); // Afficher la durée avant de démarrer
               startCountdown();
             }
           });

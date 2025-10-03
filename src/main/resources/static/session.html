@@ -65,16 +65,42 @@
 
     <div
       id="timerDialog"
-      class="d-none position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 justify-content-center align-items-center"
+      class="d-none position-fixed top-0 start-0 w-100 h-100 justify-content-center align-items-center"
     >
-      <div class="bg-dark text-light p-4 rounded">
-        <label for="timerMinutes" class="form-label">Durée du timer</label>
-        <select id="timerMinutes" class="form-select mb-3 text-center"></select>
-        <div class="text-end">
-          <button id="timerCancel" class="btn btn-secondary me-2">
+      <div class="timer-dialog-content">
+        <div class="timer-dialog-title">Durée du timer</div>
+
+        <div class="time-picker-container">
+          <div class="time-picker-column">
+            <div class="selection-indicator"></div>
+            <div class="time-picker-scroll" id="hourPicker">
+              <!-- Heures générées dynamiquement -->
+            </div>
+            <div class="time-picker-label">h</div>
+          </div>
+
+          <div class="time-picker-column">
+            <div class="selection-indicator"></div>
+            <div class="time-picker-scroll" id="minutePicker">
+              <!-- Minutes générées dynamiquement -->
+            </div>
+            <div class="time-picker-label">min</div>
+          </div>
+
+          <div class="time-picker-column">
+            <div class="selection-indicator"></div>
+            <div class="time-picker-scroll" id="secondPicker">
+              <!-- Secondes générées dynamiquement -->
+            </div>
+            <div class="time-picker-label">sec</div>
+          </div>
+        </div>
+
+        <div class="timer-dialog-buttons">
+          <button id="timerCancel" class="timer-btn timer-btn-cancel">
             Annuler
           </button>
-          <button id="timerOk" class="btn btn-primary">OK</button>
+          <button id="timerOk" class="timer-btn timer-btn-ok">OK</button>
         </div>
       </div>
     </div>
