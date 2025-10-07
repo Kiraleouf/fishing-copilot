@@ -224,8 +224,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             headers: { sessionId },
           });
           if (resp.ok) {
-            dingSound.currentTime = 0;
-            dingSound.play();
             const data = await resp.json();
             count.textContent = data.fishCount;
             if (intervalId) {
