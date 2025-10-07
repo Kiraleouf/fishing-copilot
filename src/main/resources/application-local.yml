@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: fishing-copilot
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/fishing-copilot
+    username: localLogin
+    password: localPassword
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
