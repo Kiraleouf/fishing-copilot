@@ -32,9 +32,11 @@ async function getCurrentFishingSession() {
         if (resp.status === 200) {
           const data = await resp.json();
           localStorage.setItem('currentFishingSessionId', data.id);
+          localStorage.setItem('currentFishingSessionName', data.name);
           return data;
         }
         localStorage.removeItem('currentFishingSessionId');
+        localStorage.removeItem('currentFishingSessionName');
         return null;
     }
 

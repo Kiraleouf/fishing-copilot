@@ -1,0 +1,118 @@
+.rod-card {
+  background: rgba(15, 15, 15, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 20px rgba(0, 255, 150, 0.05);
+  color: #fff;
+  max-width: 400px;
+  margin-inline: auto;
+}
+
+.rod-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.rod-title {
+  font-weight: 600;
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+}
+
+.rod-close-btn {
+  background: transparent;
+  border: none;
+  color: #aaa;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+.rod-close-btn:hover {
+  color: #ff5555;
+}
+
+.rod-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Timer */
+.rod-timer {
+  flex: 1;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 16px 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+/* Play button */
+.rod-play-btn {
+  flex: 0 0 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 255, 150, 0.5);
+  background: rgba(0, 255, 150, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.rod-play-btn:hover {
+  background: rgba(0, 255, 150, 0.2);
+  transform: scale(1.05);
+}
+.rod-play-btn svg {
+  pointer-events: none;
+}
+
+/* Compteur de poisson */
+.rod-fish-counter {
+  flex: 1;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 8px;
+}
+
+.counter-label {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-bottom: 6px;
+}
+
+.counter-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.counter-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #fff;
+  font-size: 1.3rem;
+  border-radius: 6px;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.counter-btn:hover {
+  background: rgba(0, 255, 150, 0.3);
+}
+
+.counter-value {
+  font-size: 1.6rem;
+  font-weight: bold;
+}

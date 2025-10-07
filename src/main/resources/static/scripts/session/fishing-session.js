@@ -23,11 +23,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (logoutBtn) {
         logoutBtn.addEventListener('click', async () => {
-          await apiFetch('/fisherman/logout', { headers: { sessionId } });
-          localStorage.removeItem('sessionId');
-          localStorage.removeItem('login');
-          localStorage.removeItem('currentFishingSessionId');
-          window.location.href = 'index.html';
+            await apiFetch('/fisherman/logout', { headers: { sessionId } });
+            localStorage.removeItem('sessionId');
+            localStorage.removeItem('login');
+            localStorage.removeItem('currentFishingSessionId');
+            localStorage.removeItem('currentFishingSessionName');
+            window.location.href = 'index.html';
         });
     }
 
@@ -59,10 +60,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           body: JSON.stringify({ name }),
         });
         if (resp.ok) {
-          const data = await resp.json();
-          localStorage.setItem('currentFishingSessionId', data.id);
-          modal.classList.remove('active');
-          window.location.href = 'session.html';
+            const data = await resp.json();
+            localStorage.setItem('currentFishingSessionId', data.id);
+            localStorage.setItem('currentFishingSessionName', data.name);
+            modal.classList.remove('active');
+            window.location.href = 'session.html';
         }
       });
     }
@@ -70,11 +72,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function getCurrentFishingSession() {
         const resp = await apiFetch('/fishing-session/current', { headers: { sessionId } });
         if (resp.status === 200) {
-          const data = await resp.json();
-          localStorage.setItem('currentFishingSessionId', data.id);
-          return data;
+            const data = await resp.json();
+            localStorage.setItem('currentFishingSessionId', data.id);
+            localStorage.setItem('currentFishingSessionName', data.name);
+            return data;
         }
         localStorage.removeItem('currentFishingSessionId');
+        localStorage.removeItem('currentFishingSessionName');
         return null;
     }
 

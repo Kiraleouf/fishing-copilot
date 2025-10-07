@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     localStorage.removeItem('sessionId');
     localStorage.removeItem('login');
     localStorage.removeItem('currentFishingSessionId');
+    localStorage.removeItem('currentFishingSessionName');
     return false;
   }
 
@@ -75,7 +76,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         method: 'POST',
         headers: { sessionId },
       });
-      localStorage.removeItem('currentFishingSessionId');
+        localStorage.removeItem('currentFishingSessionId');
+        localStorage.removeItem('currentFishingSessionName');
       window.location.href = 'home.html';
     });
   }
@@ -86,9 +88,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (resp.status === 200) {
           const data = await resp.json();
           localStorage.setItem('currentFishingSessionId', data.id);
+          localStorage.setItem('currentFishingSessionName', data.name);
           return data;
         }
         localStorage.removeItem('currentFishingSessionId');
+        localStorage.removeItem('currentFishingSessionName');
         return null;
     }
 });
