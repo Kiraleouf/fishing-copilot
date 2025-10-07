@@ -9,7 +9,7 @@ services:
     environment:
       POSTGRES_USER: localLogin
       POSTGRES_PASSWORD: localPassword
-      POSTGRES_DB: fishing-copilotz
+      POSTGRES_DB: fishing-copilot
       PGDATA: /data/storage
     ports:
       - "5432:5432"
