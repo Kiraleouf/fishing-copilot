@@ -2,6 +2,7 @@ package com.ggc.fishingcopilot.fishingsession.controller
 
 import com.ggc.fishingcopilot.fishingsession.model.dto.CreateFishingSessionRequest
 import com.ggc.fishingcopilot.fishingsession.model.dto.FishingSessionResponse
+import com.ggc.fishingcopilot.fishingsession.model.dto.PaginatedResponse
 import com.ggc.fishingcopilot.fishingsession.rod.FishingRodService
 import com.ggc.fishingcopilot.fishingsession.rod.model.dto.CreateRodRequest
 import com.ggc.fishingcopilot.fishingsession.rod.model.dto.RodResponse
@@ -24,7 +25,18 @@ class FishingSessionController(
         @RequestBody req: CreateFishingSessionRequest
     ): ResponseEntity<FishingSessionResponse> {
         val session = service.create(sessionId, req.name)
-        return ResponseEntity.ok(FishingSessionResponse(session.id, session.name))
+        return ResponseEntity.ok(FishingSessionResponse(session.id, session.name, session.date))
+    }
+
+    //Create endpoint fishing-session/history that returns a list of FishingSessionResponse paginated
+    @GetMapping("/fishing-session/history")
+    @Operation(summary = "Get fishing session history", description = "Returns a list of past fishing sessions")
+    fun history(
+        @RequestHeader("sessionId") sessionId: UUID,
+        @RequestParam(defaultValue = "0") page: Int,
+        @RequestParam(defaultValue = "10") size: Int
+    ): PaginatedResponse<FishingSessionResponse> {
+        return service.getPaginatedSessions(page, size)
     }
 
     @GetMapping("/fishing-session/current")
@@ -32,7 +44,7 @@ class FishingSessionController(
     fun current(@RequestHeader("sessionId") sessionId: UUID): ResponseEntity<FishingSessionResponse> {
         val session = service.getCurrent(sessionId)
             ?: return ResponseEntity.noContent().build()
-        return ResponseEntity.ok(FishingSessionResponse(session.id, session.name))
+        return ResponseEntity.ok(FishingSessionResponse(session.id, session.name, session.date))
     }
 
     @PostMapping("/fishing-session/close")

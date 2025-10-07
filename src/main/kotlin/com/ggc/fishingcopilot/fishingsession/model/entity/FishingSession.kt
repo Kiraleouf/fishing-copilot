@@ -11,6 +11,8 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.sql.Date
+import java.time.LocalDate
 
 @Entity
 @Table(name = "fishing_session")
@@ -21,6 +23,9 @@ class FishingSession(
 
     @Column(nullable = false)
     var name: String = "",
+
+    @Column(nullable = false, updatable = false)
+    val date: LocalDate = LocalDate.now(),
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

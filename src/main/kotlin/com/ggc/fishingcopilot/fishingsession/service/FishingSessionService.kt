@@ -5,6 +5,10 @@ import com.ggc.fishingcopilot.fishingsession.model.entity.FishingSession
 import com.ggc.fishingcopilot.fishingsession.model.entity.FishingSessionStatus
 import com.ggc.fishingcopilot.session.UserSessionRepository
 import com.ggc.fishingcopilot.fisherman.exception.SessionNotFoundException
+import com.ggc.fishingcopilot.fishingsession.model.dto.FishingSessionResponse
+import com.ggc.fishingcopilot.fishingsession.model.dto.PaginatedResponse
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
 import java.util.UUID
 
@@ -25,6 +29,29 @@ class FishingSessionService(
         return fishingSessionRepository.findFirstByFishermanAndStatus(
             session.fisherman,
             FishingSessionStatus.IN_PROGRESS
+        )
+    }
+
+    fun getPaginatedSessions(page: Int, size: Int): PaginatedResponse<FishingSessionResponse> {
+        val pageable = PageRequest.of(page, size, Sort.by("id").descending())
+        val result = fishingSessionRepository.findAll(pageable)
+
+        val items = result.content.map {
+            FishingSessionResponse(
+                id = it.id,
+                name = it.name,
+                date = it.date
+            )
+        }
+
+        return PaginatedResponse(
+            items = items,
+            page = result.number,
+            size = result.size,
+            totalItems = result.totalElements,
+            totalPages = result.totalPages,
+            hasNext = result.hasNext(),
+            hasPrevious = result.hasPrevious()
         )
     }
 
