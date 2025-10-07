@@ -26,5 +26,17 @@ async function apiFetch(url, options) {
   return resp;
 }
 
+
+async function getCurrentFishingSession() {
+        const resp = await apiFetch('/fishing-session/current', { headers: { sessionId } });
+        if (resp.status === 200) {
+          const data = await resp.json();
+          localStorage.setItem('currentFishingSessionId', data.id);
+          return data;
+        }
+        localStorage.removeItem('currentFishingSessionId');
+        return null;
+    }
+
 window.showToast = showToast;
 window.apiFetch = apiFetch;
