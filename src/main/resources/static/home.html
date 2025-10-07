@@ -25,39 +25,28 @@
 
 <body class="d-flex flex-column min-vh-100 overflow-hidden text-light">
     <header class="app-header">
-        <div class="header-left">
-            <span id="usernameDisplay" class="username-display"></span>
-        </div>
-
-        <div class="header-center-session">
-            <img src="/img/logo.png" alt="Fishing Copilot Logo" class="logo">
-        </div>
-
-        <div class="header-right">
-            <button id="logoutBtn" class="logout-btn" title="Se déconnecter">
-                <img src="/img/logout.png" alt="Déconnexion">
-            </button>
-        </div>
+        <div class="header-left"><span id="usernameDisplay" class="username-display"></span></div>
+        <div class="header-center-session"><img src="/img/logo.png" class="logo" alt="Fishing Copilot Logo"></div>
+        <div class="header-right"><button id="logoutBtn" class="logout-btn" title="Se déconnecter"><img src="/img/logout.png" alt="Déconnexion"></button></div>
     </header>
-    <!-- Section principale -->
-    <main class="flex-grow-1 d-flex flex-column">
-        <!-- Bouton de création -->
-        <div class="p-3 sticky-top" style="z-index: 10;">
+
+    <main class="main-content">
+        <!-- NE PLUS utiliser sticky-top ici -->
+        <div class="toolbar p-3">
             <button id="startSession" class="btn btn-primary w-100">Démarrer une nouvelle session</button>
         </div>
 
-        <!-- Liste scrollable -->
-        <div id="sessionList" class="flex-grow-1 overflow-auto px-3 py-2">
-            <!-- Les sessions seront insérées ici -->
+        <div id="sessionList" class="session-list px-3 py-2">
+            <!-- items -->
         </div>
     </main>
 
-    <footer>
-        © 2025 Fishing Copilot — Tous droits réservés
-        <br>
+    <footer class="app-footer">
+        © 2025 Fishing Copilot — Tous droits réservés<br>
         <a href="mailto:contact.fishingcopilot@gmail.com">contact</a>
     </footer>
-    <script src="utils.js?v=1"></script>
+
+<script src="utils.js?v=1"></script>
     <script src="scripts/session/fishing-session.js?v=1"></script>
 </body>
 </html>

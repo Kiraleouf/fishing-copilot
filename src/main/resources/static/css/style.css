@@ -268,11 +268,6 @@ footer {
   transform: scale(1.1);
 }
 
-/* ===== CONTENU SOUS LE HEADER ===== */
-main, .page-content {
-  padding-top: 80px; /* espace pour éviter que le contenu passe sous le header */
-}
-
 /* ===== PSEUDO UTILISATEUR ===== */
 .username-display {
   color: #bfffe1;
@@ -403,3 +398,51 @@ main, .page-content {
   transform: translateY(1px);
   box-shadow: 0 0 12px rgba(176, 25, 46, 0.3);
 }
+
+:root{
+  --header-h:64px;
+  --footer-h:56px;
+}
+
+/* Header fixe */
+.app-header{
+  position:fixed; top:0; left:0; right:0; height:var(--header-h);
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 16px; background:rgba(10,10,10,.85);
+  backdrop-filter:blur(12px); border-bottom:1px solid rgba(255,255,255,.05);
+  z-index:1000;
+}
+
+/* Footer fixe */
+.app-footer{
+  position:fixed; left:0; right:0; bottom:0; height:var(--footer-h);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.8); color:#aaa; text-align:center;
+  border-top:1px solid rgba(255,255,255,.1); font-size:.9rem; z-index:1000;
+}
+.app-footer a{ color:#00ff9d; text-decoration:none; }
+.app-footer a:hover{ text-decoration:underline; }
+
+/* Zone centrale entre header et footer */
+.main-content{
+  position:fixed; left:0; right:0;
+  top:var(--header-h); bottom:var(--footer-h);
+  display:flex; flex-direction:column; overflow:hidden;
+}
+
+/* Bande du bouton (reste visible) */
+.toolbar{
+  background:rgba(0,0,0,.55);
+  backdrop-filter:blur(6px);
+  border-bottom:1px solid rgba(255,255,255,.06);
+  z-index:1;
+}
+
+/* La liste scrolle */
+.session-list{
+  flex:1 1 auto; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin; scrollbar-color:#666 #222;
+}
+.session-list::-webkit-scrollbar{ width:8px; }
+.session-list::-webkit-scrollbar-thumb{ background:#666; border-radius:4px; }
+.session-list::-webkit-scrollbar-track{ background:#222; }

@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       loading = true;
 
       const sessionId = getSessionIdOrRedirect();
-      const url = `/fishing-session/history?page=${page}&size=10`;
+      const url = `/fishing-session/history?page=${page}&size=50`;
 
       const response = await fetch(url, {
         method: 'GET',
