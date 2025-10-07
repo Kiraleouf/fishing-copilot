@@ -1,160 +1,26 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fishing Copilot</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
-
-    :root {
-      --primary: #0a84ff;
-      --text: #f2f2f2;
-      --bg: #0b0b0b;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Poppins', sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      overflow-x: hidden;
-      scroll-behavior: smooth;
-    }
-
-    header {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      padding: 15px 20px;
-      background: rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(10px);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 10;
-    }
-
-    header img {
-        height: 40px;
-        filter: brightness(0) invert(1);
-    }
-
-    .hero {
-        height: 90vh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        padding: 0 20px;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .hero::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 120%;
-      background: url('img/background.png') center/cover no-repeat;
-      z-index: -1;
-      opacity: 0.25;
-      transform: translateY(0);
-      transition: transform 0.3s ease-out;
-    }
-
-    h1 {
-      font-size: clamp(2rem, 6vw, 3.5rem);
-      font-weight: 700;
-      margin-bottom: 15px;
-    }
-
-    p {
-      font-size: clamp(1rem, 3vw, 1.2rem);
-      line-height: 1.5;
-      opacity: 0.9;
-      max-width: 600px;
-      margin: 0 auto 40px;
-    }
-
-    .cta {
-      display: inline-block;
-      padding: 14px 36px;
-      background: linear-gradient(135deg, #16a085, #0c6e5b);
-      border-radius: 30px;
-      color: white;
-      font-weight: 500;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(39, 174, 96, 1.0);
-    }
-
-    .cta:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 25px rgba(39, 174, 96, 1.0);;
-    }
-
-    footer {
-        text-align: center;
-        padding: 25px 10px;
-        font-size: 0.9rem;
-        color: #aaa;
-    }
-
-    footer a {
-        color: #27ae60;
-        text-decoration: none;
-        transition: color 0.2s ease;
-    }
-
-    footer a:hover {
-        color: #2ecc71;
-        text-decoration: underline;
-    }
-
-    @media (min-width: 768px) {
-      .hero {
-        padding: 0 40px;
-      }
-      p {
-        font-size: 1.1rem;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fishing Copilot</title>
+    <link rel="stylesheet" href="/css/style.css"/>
 </head>
 <body>
-  <header>
-    <img src="img/logo.png" alt="Fishing Copilot">
-  </header>
+    <header class="header-center">
+        <img src="/img/logo.png" alt="Fishing Copilot Logo" class="logo">
+    </header>
 
-  <section class="hero" id="hero">
-    <h1>Fishing Copilot</h1>
-    <p>Ton assistant intelligent pour suivre tes sessions, analyser tes résultats et pêcher plus efficacement.</p>
-    <a href="/login.html" class="cta">Accéder à l'application</a>
-  </section>
+    <section class="hero" id="hero">
+        <h1>Fishing Copilot</h1>
+        <p>Ton assistant intelligent pour suivre tes sessions, analyser tes résultats et pêcher plus efficacement.</p>
+        <a href="/login.html" class="cta">Accéder à l'application</a>
+    </section>
 
-  <footer>
-    © 2025 Fishing Copilot — Tous droits réservés  
-    <br>
-    <a href="mailto:contact.fishingcopilot@gmail.com">contact</a>
-  </footer>
-
-  <script>
-    // Parallaxe léger au scroll (plus fluide sur mobile)
-    const hero = document.querySelector('.hero::before');
-    window.addEventListener('scroll', () => {
-      const offset = window.scrollY * 0.2;
-      document.querySelector('.hero').style.setProperty('--scroll', offset + 'px');
-      document.querySelector('.hero').style.backgroundPositionY = offset + 'px';
-    });
-  </script>
+    <footer>
+        © 2025 Fishing Copilot — Tous droits réservés
+        <br>
+        <a href="mailto:contact.fishingcopilot@gmail.com">contact</a>
+    </footer>
 </body>
 </html>
