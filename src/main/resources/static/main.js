@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const login = document.getElementById('login').value;
+      const login = document.getElementById('username').value;
       const password = document.getElementById('password').value;
       const resp = await apiFetch('/sign-in', {
         method: 'POST',
