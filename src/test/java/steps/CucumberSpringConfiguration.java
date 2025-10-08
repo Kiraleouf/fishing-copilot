@@ -3,5 +3,5 @@ import io.cucumber.spring.CucumberContextConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @CucumberContextConfiguration
-@SpringBootTest(classes = com.ggc.fishingcopilot.FishingCopilotApplicationKt.class)
+@SpringBootTest(classes = com.ggc.fishingcopilot.FishingCopilotApplication.class)
 public class CucumberSpringConfiguration { }

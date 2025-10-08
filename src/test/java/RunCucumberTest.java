@@ -7,7 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @RunWith(Cucumber.class)
-@SpringBootTest(classes = com.ggc.fishingcopilot.DemoApplication.class)
+@SpringBootTest(classes = com.ggc.fishingcopilot.FishingCopilotApplication.class)
 @CucumberOptions(
         features = "src/test/resources/features",
         glue = "steps"
