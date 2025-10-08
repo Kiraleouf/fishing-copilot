@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function init() {
-         await fetchSessions();
+         await fetchSessions(0);
 
         sessionList.addEventListener('scroll', () => {
           // ⚡ anti-spam: debounce du scroll
