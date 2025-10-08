@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
 
-    async function fetchSessions(page) {
+    async function fetchSessions(page = 0) {
         loading = true;
         try {
             const response = await fetch(`/fishing-session/history?page=${page}&size=50`, {
