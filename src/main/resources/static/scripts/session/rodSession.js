@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     const rodConfirm = document.getElementById('confirmModalBtn');
     const rodNameInput = document.getElementById('rodNameInput');
 
+    const logoutBtn = document.getElementById('logoutBtn');
+
     const sessionNameLabel = document.getElementById('usernameDisplay');
 
     if(sessionNameLabel) {
@@ -36,5 +38,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         rodModal.classList.remove('active');
         await createRodCard(name);
       });
+    }
+
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            await apiFetch('/fisherman/logout', { headers: { sessionId } });
+            localStorage.removeItem('sessionId');
+            localStorage.removeItem('login');
+            localStorage.removeItem('currentFishingSessionId');
+            localStorage.removeItem('currentFishingSessionName');
+            window.location.href = 'index.html';
+        });
     }
 });

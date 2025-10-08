@@ -13,6 +13,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentPage = 0;
     let loading = false;
+    let allLoaded = false;
+    let scrollTimeout;
 
     const sessionList = document.getElementById('sessionList');
 
@@ -94,58 +96,63 @@ document.addEventListener('DOMContentLoaded', async () => {
       return sid;
     }
 
-    async function fetchSessions(page = 0) {
-      loading = true;
 
-      const sessionId = getSessionIdOrRedirect();
-      const url = `/fishing-session/history?page=${page}&size=50`;
+    async function fetchSessions(page) {
+        loading = true;
+        try {
+            const response = await fetch(`/fishing-session/history?page=${page}&size=50`, {
+              headers: { sessionid: localStorage.getItem("sessionId")
+            }
+        });
+        if (!response.ok) return false;
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Accept': 'application/json',
-          [SESSION_HEADER]: sessionId
+        const data = await response.json();
+
+        if (!data.items || data.items.length === 0) {
+            allLoaded = true;
+            return false;
         }
-      });
 
-      if (!response.ok) {
-        console.error('Erreur fetch sessions:', response.status, await response.text());
-        loading = false;
-        return false;
-      }
+        data.items.forEach(sess => {
+            const el = document.createElement('div');
+            el.className = 'session-item';
+            el.textContent = `${sess.date} — ${sess.name || 'sans nom'}`;
+            el.addEventListener('click', () => console.log('Clicked session', sess.id));
+            sessionList.appendChild(el);
+        });
 
-      const data = await response.json();
-
-      data.items.forEach(sess => {
-        const el = document.createElement('div');
-        el.className = 'session-item';
-        el.textContent = `${sess.date} — ${sess.name}`;
-        el.addEventListener('click', () => console.log('Clicked session', sess.id));
-        sessionList.appendChild(el);
-      });
-
-      currentPage = data.page;
-      loading = false;
-      return data.hasNext;
+        currentPage = page;
+        return true;
+        } finally {
+            loading = false;
+        }
     }
 
     async function init() {
-      await fetchSessions();
+         await fetchSessions();
 
-      sessionList.addEventListener('scroll', async () => {
-        if (loading) return;
-        const nearBottom = sessionList.scrollTop + sessionList.clientHeight >= sessionList.scrollHeight - 100;
-        if (nearBottom) {
-          const hasNext = await fetchSessions(currentPage + 1);
-          if (!hasNext) {
-            console.log("Fin de l'historique 🎣");
-          }
-        }
-      });
+        sessionList.addEventListener('scroll', () => {
+          // ⚡ anti-spam: debounce du scroll
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(async () => {
+            if (loading || allLoaded) return;
 
-      document.getElementById('startSession').addEventListener('click', () => {
-        console.log('Créer une nouvelle session');
-      });
+            const nearBottom =
+              sessionList.scrollTop + sessionList.clientHeight >= sessionList.scrollHeight - 100;
+
+            if (nearBottom) {
+              const hasNext = await fetchSessions(currentPage + 1);
+              if (!hasNext) {
+                allLoaded = true;
+                console.log("Fin de l'historique 🎣");
+              }
+            }
+          }, 150); // on attend 150ms après la dernière frame de scroll
+        });
+
+        document.getElementById('startSession').addEventListener('click', () => {
+            console.log('Créer une nouvelle session');
+        });
     }
 
     init()
