@@ -11,10 +11,39 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const sessionNameLabel = document.getElementById('usernameDisplay');
 
+    const sessionId = localStorage.getItem('sessionId');
+    const fishingSessionId = localStorage.getItem('currentFishingSessionId');
+
     if(sessionNameLabel) {
         const sessionName = localStorage.getItem('currentFishingSessionName') || '';
         sessionNameLabel.textContent = sessionName;
     }
+
+    // Charger les cannes existantes
+    async function loadRods() {
+        if (!fishingSessionId) {
+            console.warn('Pas de session de pêche en cours');
+            return;
+        }
+
+        try {
+            const resp = await apiFetch(`/fishing-session/${fishingSessionId}/rods`, {
+                headers: { 'sessionId': sessionId }
+            });
+
+            if (resp.ok) {
+                const rods = await resp.json();
+                for (const rod of rods) {
+                    await createRodCard(rod);
+                }
+            }
+        } catch (err) {
+            console.error('Erreur chargement cannes:', err);
+        }
+    }
+
+    // Charger les cannes au démarrage
+    await loadRods();
 
     if (addRodBtn) {
       addRodBtn.addEventListener('click', () => {
@@ -33,10 +62,27 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (rodConfirm) {
       rodConfirm.addEventListener('click', async () => {
         const name = rodNameInput.value.trim() || 'sans nom';
-        console.log('Création canne:', name);
-        // 👉 appel à ton backend ici si besoin
-        rodModal.classList.remove('active');
-        await createRodCard(name);
+
+        try {
+            const resp = await apiFetch(`/fishing-session/${fishingSessionId}/rods`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'sessionId': sessionId
+                },
+                body: JSON.stringify({ name })
+            });
+
+            if (resp.ok) {
+                const rod = await resp.json();
+                rodModal.classList.remove('active');
+                await createRodCard(rod);
+                showToast('Canne ajoutée avec succès ! 🎣', 'success');
+            }
+        } catch (err) {
+            console.error('Erreur création canne:', err);
+            showToast('Erreur lors de la création de la canne', 'danger');
+        }
       });
     }
 

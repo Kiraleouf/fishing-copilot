@@ -101,8 +101,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         loading = true;
         try {
             const response = await fetch(`/fishing-session/history?page=${page}&size=50`, {
-              headers: { sessionid: localStorage.getItem("sessionId")
-            }
+              headers: { sessionId: localStorage.getItem("sessionId") }
         });
         if (!response.ok) return false;
 
