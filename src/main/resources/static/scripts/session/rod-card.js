@@ -1,5 +1,5 @@
 export async function createRodCard(rodData) {
-  const response = await fetch('/templates/rod-card.html');
+  const response = await fetch('/templates/rod-card.html?v=' + Date.now());
   const html = await response.text();
 
   const wrapper = document.createElement('div');
@@ -20,8 +20,8 @@ export async function createRodCard(rodData) {
   const timerDisplay = card.querySelector('.timer-display');
   const playBtn = card.querySelector('.rod-play-btn');
   const counterValue = card.querySelector('.counter-value');
-  const minusBtn = card.querySelector('.counter-btn:first-child');
-  const plusBtn = card.querySelector('.counter-btn:last-child');
+  const minusBtn = card.querySelectorAll('.counter-btn')[0];
+  const plusBtn = card.querySelectorAll('.counter-btn')[1];
   const closeBtn = card.querySelector('.rod-close-btn');
 
   // Éléments du time picker
@@ -31,8 +31,16 @@ export async function createRodCard(rodData) {
   const timePickerCancel = card.querySelector('.time-picker-cancel');
   const timePickerConfirm = card.querySelector('.time-picker-confirm');
 
+  // Vérification que tous les éléments existent
+  if (!timePickerWheel) {
+    console.error('timePickerWheel introuvable dans le template !');
+    console.log('Contenu de la carte:', card.innerHTML);
+    return;
+  }
+
   // État du timer
   let timerSeconds = 0;
+  let initialTimerSeconds = 0; // Sauvegarder le temps initial choisi
   let timerInterval = null;
   let isPlaying = false;
   let isPaused = false;
@@ -95,57 +103,27 @@ export async function createRodCard(rodData) {
     const targetItem = Array.from(items).find(item => parseInt(item.dataset.value) === minute);
     if (targetItem) {
       const container = timePickerWheel;
-      const containerRect = container.getBoundingClientRect();
-      const itemRect = targetItem.getBoundingClientRect();
-      const scrollOffset = itemRect.top - containerRect.top - containerRect.height / 2 + itemRect.height / 2;
-      container.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+      const itemTop = targetItem.offsetTop;
+      const scrollPosition = itemTop - container.clientHeight / 2 + targetItem.clientHeight / 2;
+      container.scrollTop = scrollPosition;
     }
   }
 
   function openTimePicker() {
+    console.log('Opening time picker...');
     timePickerModal.classList.add('active');
-    // Scroller à la valeur actuelle
+    // Scroller à la valeur actuelle après un court délai
     const currentMinutes = Math.floor(timerSeconds / 60);
-    setTimeout(() => scrollToMinute(currentMinutes), 50);
+    setTimeout(() => {
+      scrollToMinute(currentMinutes);
+      updateWheelSelection();
+    }, 100);
   }
 
   function closeTimePicker() {
+    console.log('Closing time picker...');
     timePickerModal.classList.remove('active');
   }
-
-  // Initialiser le wheel picker
-  initializeTimePicker();
-
-  // Événements du time picker
-  let scrollTimeout;
-  timePickerWheel.addEventListener('scroll', () => {
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(() => {
-      const selectedValue = updateWheelSelection();
-      // Snap to the selected item
-      const items = timePickerWheel.querySelectorAll('.time-picker-item');
-      const selectedItem = Array.from(items).find(item => parseInt(item.dataset.value) === selectedValue);
-      if (selectedItem) {
-        const container = timePickerWheel;
-        const containerRect = container.getBoundingClientRect();
-        const itemRect = selectedItem.getBoundingClientRect();
-        const scrollOffset = itemRect.top - containerRect.top - containerRect.height / 2 + itemRect.height / 2;
-        container.scrollBy({ top: scrollOffset, behavior: 'smooth' });
-      }
-    }, 100);
-    updateWheelSelection();
-  });
-
-  timePickerOverlay.addEventListener('click', closeTimePicker);
-  timePickerCancel.addEventListener('click', closeTimePicker);
-
-  timePickerConfirm.addEventListener('click', () => {
-    const selectedMinutes = updateWheelSelection();
-    timerSeconds = selectedMinutes * 60;
-    updateTimerDisplay();
-    setCardState('');
-    closeTimePicker();
-  });
 
   // Formater le temps MM:SS
   function formatTime(seconds) {
@@ -198,6 +176,10 @@ export async function createRodCard(rodData) {
         stopTimer();
         setCardState('inactive');
         dingSound.play().catch(err => console.warn('Erreur lecture son:', err));
+
+        // Restaurer le temps initial pour permettre de relancer facilement
+        timerSeconds = initialTimerSeconds;
+        updateTimerDisplay();
       }
     }, 1000);
   }
@@ -219,12 +201,6 @@ export async function createRodCard(rodData) {
     timerInterval = null;
     updatePlayButton();
   }
-
-  // Ouvrir le sélecteur de temps au clic sur le timer
-  timerDisplay.addEventListener('click', () => {
-    if (isPlaying) return; // Ne pas permettre le changement pendant le décompte
-    openTimePicker();
-  });
 
   // Bouton Play/Pause
   playBtn.addEventListener('click', () => {
@@ -311,5 +287,86 @@ export async function createRodCard(rodData) {
     }
   });
 
-  document.querySelector('.session-body').appendChild(card);
+  // AJOUTER au DOM à la fin, après que tout soit configuré
+  const sessionBody = document.querySelector('.session-body');
+  if (sessionBody) {
+    sessionBody.appendChild(card);
+
+    // Initialiser le wheel picker APRÈS l'ajout au DOM
+    initializeTimePicker();
+
+    // Ouvrir le sélecteur de temps au clic sur le timer (APRÈS l'ajout au DOM)
+    timerDisplay.addEventListener('click', (e) => {
+      console.log('Timer clicked, isPlaying:', isPlaying, 'isPaused:', isPaused, 'timerInterval:', timerInterval);
+      // Ne permettre le changement QUE si le timer n'est pas en cours d'exécution
+      if (isPlaying && !isPaused) {
+        console.log('Timer is running, cannot change time');
+        return;
+      }
+      e.preventDefault();
+      e.stopPropagation();
+      openTimePicker();
+    });
+
+    // Événements du time picker
+    let scrollTimeout;
+    let isScrolling = false;
+
+    timePickerWheel.addEventListener('scroll', () => {
+      clearTimeout(scrollTimeout);
+      isScrolling = true;
+
+      // Mettre à jour visuellement pendant le scroll
+      updateWheelSelection();
+
+      // Attendre que l'utilisateur arrête de scroller
+      scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+        const selectedValue = updateWheelSelection();
+
+        // Snap UNIQUEMENT si l'utilisateur a fini de scroller
+        const items = timePickerWheel.querySelectorAll('.time-picker-item');
+        const selectedItem = Array.from(items).find(item => parseInt(item.dataset.value) === selectedValue);
+        if (selectedItem && !isScrolling) {
+          const container = timePickerWheel;
+          const itemTop = selectedItem.offsetTop;
+          const targetScroll = itemTop - container.clientHeight / 2 + selectedItem.clientHeight / 2;
+          const currentScroll = container.scrollTop;
+
+          // Snap seulement si la différence est significative (évite la boucle infinie)
+          if (Math.abs(targetScroll - currentScroll) > 5) {
+            container.scrollTo({
+              top: targetScroll,
+              behavior: 'smooth'
+            });
+          }
+        }
+      }, 150);
+    });
+
+    timePickerOverlay.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeTimePicker();
+    });
+
+    timePickerCancel.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closeTimePicker();
+    });
+
+    timePickerConfirm.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const selectedMinutes = updateWheelSelection();
+      timerSeconds = selectedMinutes * 60;
+      initialTimerSeconds = timerSeconds; // Sauvegarder le temps choisi
+      updateTimerDisplay();
+      setCardState('');
+      closeTimePicker();
+    });
+  } else {
+    console.error('Élément .session-body introuvable !');
+  }
 }
