@@ -20,7 +20,7 @@ class FishingRodService(
     fun addRod(sessionId: UUID, fishingSessionId: Int, name: String): FishingRod {
         val session = sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }
         val fishingSession = fishingSessionRepository.findById(fishingSessionId)
-            .filter { it.fisherman == session.fisherman }
+            .filter { it.fisherman.id == session.fisherman.id }
             .orElseThrow { SessionNotFoundException() }
         val rod = FishingRod(name = name.take(20), fishingSession = fishingSession)
         return rodRepository.save(rod)
@@ -38,7 +38,7 @@ class FishingRodService(
     fun getRods(sessionId: UUID, fishingSessionId: Int): List<RodResponse> {
         val session = sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }
         val fishingSession = fishingSessionRepository.findById(fishingSessionId)
-            .filter { it.fisherman == session.fisherman }
+            .filter { it.fisherman.id == session.fisherman.id }
             .orElseThrow { SessionNotFoundException() }
         return rodRepository.findAllByFishingSessionId(fishingSession.id).map { rod ->
             val count = fishRepository.countByFishingRodId(rod.id)
@@ -49,7 +49,7 @@ class FishingRodService(
     fun addFish(sessionId: UUID, fishingSessionId: Int, rodId: Int): RodResponse? {
         val session = sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }
         val fishingSession = fishingSessionRepository.findById(fishingSessionId)
-            .filter { it.fisherman == session.fisherman }
+            .filter { it.fisherman.id == session.fisherman.id }
             .orElseThrow { SessionNotFoundException() }
         val rod = rodRepository.findByIdAndFishingSessionId(rodId, fishingSession.id) ?: return null
         fishRepository.save(Fish(fishingRod = rod))
@@ -60,7 +60,7 @@ class FishingRodService(
     fun removeFish(sessionId: UUID, fishingSessionId: Int, rodId: Int): RodResponse? {
         val session = sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }
         val fishingSession = fishingSessionRepository.findById(fishingSessionId)
-            .filter { it.fisherman == session.fisherman }
+            .filter { it.fisherman.id == session.fisherman.id }
             .orElseThrow { SessionNotFoundException() }
         val rod = rodRepository.findByIdAndFishingSessionId(rodId, fishingSession.id) ?: return null
         val fish = fishRepository.findTopByFishingRodIdOrderByCaughtAtDesc(rod.id)

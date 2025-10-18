@@ -4,4 +4,6 @@ import com.ggc.fishingcopilot.session.model.entity.UserSession
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.UUID
 
-interface UserSessionRepository : JpaRepository<UserSession, UUID>
+interface UserSessionRepository : JpaRepository<UserSession, UUID> {
+    fun findByFishermanId(fishermanId: Int): List<UserSession>
+}
