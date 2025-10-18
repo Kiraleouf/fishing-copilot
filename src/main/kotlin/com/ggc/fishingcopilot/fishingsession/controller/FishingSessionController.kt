@@ -36,7 +36,7 @@ class FishingSessionController(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): PaginatedResponse<FishingSessionResponse> {
-        return service.getPaginatedSessions(page, size)
+        return service.getPaginatedSessions(sessionId, page, size)
     }
 
     @GetMapping("/fishing-session/current")

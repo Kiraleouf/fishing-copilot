@@ -8,6 +8,21 @@
   color: #fff;
   max-width: 400px;
   margin-inline: auto;
+  transition: all 0.3s ease;
+}
+
+/* État actif - vert */
+.rod-card-active {
+  background: rgba(0, 255, 150, 0.15);
+  border: 1px solid rgba(0, 255, 150, 0.4);
+  box-shadow: 0 0 30px rgba(0, 255, 150, 0.3);
+}
+
+/* État inactif - rouge */
+.rod-card-inactive {
+  background: rgba(255, 50, 50, 0.15);
+  border: 1px solid rgba(255, 50, 50, 0.4);
+  box-shadow: 0 0 30px rgba(255, 50, 50, 0.3);
 }
 
 .rod-header {
@@ -51,6 +66,16 @@
   padding: 16px 0;
   font-size: 1.6rem;
   font-weight: 700;
+}
+
+.timer-display {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+}
+
+.timer-display:hover {
+  color: rgba(0, 255, 150, 0.8);
 }
 
 /* Play button */
@@ -115,4 +140,171 @@
 .counter-value {
   font-size: 1.6rem;
   font-weight: bold;
+}
+
+/* ===== Time Picker Modal ===== */
+.time-picker-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-picker-modal.active {
+  display: flex;
+}
+
+.time-picker-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(5px);
+}
+
+.time-picker-content {
+  position: relative;
+  background: linear-gradient(145deg, rgba(20, 20, 20, 0.95), rgba(15, 15, 15, 0.95));
+  border: 2px solid rgba(0, 255, 150, 0.3);
+  border-radius: 20px;
+  padding: 24px;
+  min-width: 320px;
+  box-shadow: 0 10px 40px rgba(0, 255, 150, 0.2);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.time-picker-title {
+  color: rgba(0, 255, 150, 0.9);
+  text-align: center;
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.time-picker-wheel-container {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+  margin-bottom: 20px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.time-picker-selector {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 50px;
+  transform: translateY(-50%);
+  background: rgba(0, 255, 150, 0.15);
+  border-top: 2px solid rgba(0, 255, 150, 0.5);
+  border-bottom: 2px solid rgba(0, 255, 150, 0.5);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.time-picker-wheel {
+  position: relative;
+  height: 100%;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+  padding: 75px 0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.time-picker-wheel::-webkit-scrollbar {
+  display: none;
+}
+
+.time-picker-item {
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.3);
+  scroll-snap-align: center;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.time-picker-item.selected {
+  color: rgba(0, 255, 150, 1);
+  font-size: 2rem;
+  text-shadow: 0 0 10px rgba(0, 255, 150, 0.5);
+}
+
+.time-picker-item.near {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 1.6rem;
+}
+
+.time-picker-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.time-picker-cancel,
+.time-picker-confirm {
+  flex: 1;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.5px;
+}
+
+.time-picker-cancel {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.time-picker-cancel:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.time-picker-confirm {
+  background: linear-gradient(135deg, rgba(0, 255, 150, 0.8), rgba(0, 200, 120, 0.8));
+  color: #000;
+  box-shadow: 0 4px 15px rgba(0, 255, 150, 0.3);
+}
+
+.time-picker-confirm:hover {
+  background: linear-gradient(135deg, rgba(0, 255, 150, 1), rgba(0, 200, 120, 1));
+  box-shadow: 0 6px 20px rgba(0, 255, 150, 0.4);
+  transform: translateY(-2px);
+}
+
+.time-picker-confirm:active {
+  transform: translateY(0);
 }

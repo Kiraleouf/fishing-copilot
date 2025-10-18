@@ -32,9 +32,10 @@ class FishingSessionService(
         )
     }
 
-    fun getPaginatedSessions(page: Int, size: Int): PaginatedResponse<FishingSessionResponse> {
+    fun getPaginatedSessions(sessionId: UUID, page: Int, size: Int): PaginatedResponse<FishingSessionResponse> {
+        val session = sessionRepository.findById(sessionId).orElseThrow { SessionNotFoundException() }
         val pageable = PageRequest.of(page, size, Sort.by("id").descending())
-        val result = fishingSessionRepository.findAll(pageable)
+        val result = fishingSessionRepository.findAllByFisherman(session.fisherman, pageable)
 
         val items = result.content.map {
             FishingSessionResponse(
