@@ -25,6 +25,19 @@
             </div>
         </div>
     </div>
+    <!-- Modal for uploading photos -->
+    <div id="uploadPhotoModal" class="modal">
+      <div class="modal-content">
+        <span class="close" id="closeUploadModal">&times;</span>
+        <h2>Ajouter des photos à votre session</h2>
+        <form id="photoUploadForm">
+          <input type="file" id="photoInput" name="photos" multiple accept="image/*">
+          <div id="photoPreviewContainer"></div>
+          <button type="button" id="uploadPhotosButton">Uploader</button>
+          <button type="button" id="finishSessionButton">Terminer</button>
+        </form>
+      </div>
+    </div>
     <body class="d-flex flex-column min-vh-100 overflow-hidden text-light">
         <header class="app-header">
             <div class="header-left">
@@ -34,9 +47,6 @@
                 <img src="/img/logo.png" alt="Fishing Copilot Logo" class="logo">
             </div>
             <div class="header-right">
-                <button id="logoutBtn" class="logout-btn" title="Se déconnecter">
-                    <img src="/img/logout.png" alt="Déconnexion">
-                </button>
             </div>
         </header>
         <!-- Section principale -->
@@ -61,8 +71,13 @@
             <br>
             <a href="mailto:contact.fishingcopilot@gmail.com">contact</a>
         </footer>
+
+        <script>
+          document.getElementById('backToHomeButton').addEventListener('click', () => {
+            window.location.href = 'home.html';
+          });
+        </script>
         <script src="utils.js?v=1"></script>
-        <script src="main.js?v=5"></script>
         <script type="module" src="scripts/session/rodSession.js?v=1"></script>
         <script type="module" src="scripts/session/rod-card.js?v=1"></script>
     </body>

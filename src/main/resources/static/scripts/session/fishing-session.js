@@ -116,7 +116,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             const el = document.createElement('div');
             el.className = 'session-item';
             el.textContent = `${sess.date} — ${sess.name || 'sans nom'}`;
-            el.addEventListener('click', () => console.log('Clicked session', sess.id));
+            el.addEventListener('click', () => {
+                localStorage.setItem('currentFishingSessionId', sess.id);
+                window.location.href = 'sessionhistory.html';
+            });
             sessionList.appendChild(el);
         });
 
@@ -154,5 +157,5 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    init()
+    init();
 });

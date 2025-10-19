@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Historique de session - Fishing Copilot 🎣</title>
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+
+<body>
+<div class="overlay"></div>
+
+<!-- CONTENU PRINCIPAL -->
+<header class="app-header">
+    <div class="header-left">
+        <!-- Bouton pour revenir à l'écran d'accueil -->
+        <button id="backToHomeButton" class="btn btn-secondary" style="margin-right: 10px;">Retour à l'accueil</button>
+    </div>
+    <div class="header-center-session">
+        <img src="/img/logo.png" alt="Fishing Copilot Logo" class="logo">
+    </div>
+    <div class="header-right">
+    </div>
+</header>
+<!-- Section principale -->
+<main class="main-content">
+    <section class="container" style="margin-top: 80px; width: 95%; max-width: 500px;">
+        <h1 id="sessionName">Session : Étang des Peupliers</h1>
+        <p id="sessionDate" style="color:#bfffe1; font-size:0.95rem; margin-bottom:20px;">12 octobre 2025</p>
+
+        <hr style="border:1px solid rgba(255,255,255,0.1); margin:20px 0;" />
+
+        <!-- Section cannes -->
+        <h3 style="color:#00ff9d; margin-bottom:10px;">🎣 Résultats par canne</h3>
+        <div id="rodsList" style="text-align:left;">
+            <div class="session-item" style="display:flex; justify-content:space-between;">
+                <span># 1 (maïs doux)</span>
+                <span><strong>3 poissons</strong></span>
+            </div>
+            <div class="session-item" style="display:flex; justify-content:space-between;">
+                <span># 2 (pellet method)</span>
+                <span><strong>1 poisson</strong></span>
+            </div>
+            <div class="session-item" style="display:flex; justify-content:space-between;">
+                <span>Canne 3 (pop-up fraise)</span>
+                <span><strong>5 poissons</strong></span>
+            </div>
+        </div>
+
+        <hr style="border:1px solid rgba(255,255,255,0.1); margin:25px 0;" />
+
+        <!-- Section photos -->
+        <h3 style="color:#00ff9d; margin-bottom:15px;">📸 Photos de la session</h3>
+        <div id="photosGrid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(100px,1fr)); gap:10px;">
+        </div>
+
+        <hr style="border:1px solid rgba(255,255,255,0.1); margin:25px 0;" />
+
+        <!-- Bouton de partage -->
+        <button class="btn-primary" id="shareButton" style="margin-top:15px;">
+            🚀 Partager ma session
+        </button>
+    </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="app-footer">
+    © 2025 Fishing Copilot — Tous droits réservés
+    <br>
+    <a href="mailto:contact.fishingcopilot@gmail.com">contact</a>
+</footer>
+
+<script src="scripts/session/sessionhistory.js"></script>
+</body>
+</html>

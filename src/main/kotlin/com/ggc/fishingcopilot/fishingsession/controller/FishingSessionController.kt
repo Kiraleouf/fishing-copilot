@@ -14,7 +14,7 @@ import java.util.UUID
 
 @RestController
 class FishingSessionController(
-    private val service: FishingSessionService,
+    private val fishingSessionService: FishingSessionService,
     private val rodService: FishingRodService
 ) {
 
@@ -24,7 +24,7 @@ class FishingSessionController(
         @RequestHeader("sessionId") sessionId: UUID,
         @RequestBody req: CreateFishingSessionRequest
     ): ResponseEntity<FishingSessionResponse> {
-        val session = service.create(sessionId, req.name)
+        val session = fishingSessionService.create(sessionId, req.name)
         return ResponseEntity.ok(FishingSessionResponse(session.id, session.name, session.date))
     }
 
@@ -36,13 +36,13 @@ class FishingSessionController(
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "10") size: Int
     ): PaginatedResponse<FishingSessionResponse> {
-        return service.getPaginatedSessions(sessionId, page, size)
+        return fishingSessionService.getPaginatedSessions(sessionId, page, size)
     }
 
     @GetMapping("/fishing-session/current")
     @Operation(summary = "Get current fishing session", description = "Returns current IN_PROGRESS session if exists")
     fun current(@RequestHeader("sessionId") sessionId: UUID): ResponseEntity<FishingSessionResponse> {
-        val session = service.getCurrent(sessionId)
+        val session = fishingSessionService.getCurrent(sessionId)
             ?: return ResponseEntity.noContent().build()
         return ResponseEntity.ok(FishingSessionResponse(session.id, session.name, session.date))
     }
@@ -50,7 +50,7 @@ class FishingSessionController(
     @PostMapping("/fishing-session/close")
     @Operation(summary = "Close current fishing session", description = "Close the current IN_PROGRESS session")
     fun close(@RequestHeader("sessionId") sessionId: UUID): ResponseEntity<Void> {
-        service.close(sessionId)
+        fishingSessionService.close(sessionId)
         return ResponseEntity.ok().build()
     }
 
@@ -106,5 +106,16 @@ class FishingSessionController(
     ): ResponseEntity<RodResponse> {
         val resp = rodService.removeFish(sessionId, fishingSessionId, rodId) ?: return ResponseEntity.notFound().build()
         return ResponseEntity.ok(resp)
+    }
+
+    //add get to fetch a complete session by fishing session id
+    @GetMapping("/fishing-session/{fishingSessionId}")
+    @Operation(summary = "Get full fishing session", description = "Get complete details of a fishing session")
+    fun getFullSession(
+        @RequestHeader("sessionId") sessionId: UUID,
+        @PathVariable("fishingSessionId") fishingSessionId: Int
+    ): ResponseEntity<Any> {
+        val fullSession = fishingSessionService.getFullSession(sessionId, fishingSessionId)
+        return ResponseEntity.ok(fullSession)
     }
 }

@@ -63,25 +63,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  const closeBtn = document.getElementById('closeSession');
-  if (closeBtn) {
-    const current = await getCurrentFishingSession();
-    if (!current) {
-      window.location.href = 'home.html';
-      return;
-    }
-
-    closeBtn.addEventListener('click', async () => {
-      await apiFetch('/fishing-session/close', {
-        method: 'POST',
-        headers: { sessionId },
-      });
-        localStorage.removeItem('currentFishingSessionId');
-        localStorage.removeItem('currentFishingSessionName');
-      window.location.href = 'home.html';
-    });
-  }
-
 
     async function getCurrentFishingSession() {
         const resp = await apiFetch('/fishing-session/current', { headers: { sessionId } });
