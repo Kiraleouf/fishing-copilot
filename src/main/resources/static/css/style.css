@@ -415,6 +415,16 @@ footer {
   display:flex; flex-direction:column; overflow:hidden;
 }
 
+/* Conteneur spécifique pour la page historique de session
+   - prend tout l'espace disponible dans .main-content
+   - devient scrollable sans affecter le comportement global */
+.session-main{
+  flex: 1 1 auto;              /* occupe l'espace entre header et footer */
+  overflow-y: auto;           /* active le scroll vertical */
+  -webkit-overflow-scrolling: touch; /* meilleur scrolling sur mobile */
+  padding: 12px 0;            /* petit padding vertical si nécessaire */
+}
+
 /* Bande du bouton (reste visible) */
 .toolbar{
   background:rgba(0,0,0,.55);
