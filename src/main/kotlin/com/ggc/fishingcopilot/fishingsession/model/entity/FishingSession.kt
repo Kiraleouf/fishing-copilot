@@ -1,6 +1,7 @@
 package com.ggc.fishingcopilot.fishingsession.model.entity
 
 import com.ggc.fishingcopilot.fisherman.model.entity.Fisherman
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -10,8 +11,8 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
-import java.sql.Date
 import java.time.LocalDate
 
 @Entity
@@ -33,5 +34,13 @@ class FishingSession(
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    var fisherman: Fisherman
-)
+    var fisherman: Fisherman,
+
+    @OneToMany(mappedBy = "fishingSession", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var pictures: MutableList<Picture> = mutableListOf()
+) {
+    fun addPicture(picture: Picture) {
+        pictures.add(picture)
+        picture.fishingSession = this
+    }
+}

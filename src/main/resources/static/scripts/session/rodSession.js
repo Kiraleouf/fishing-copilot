@@ -1,6 +1,7 @@
 import { createRodCard } from './rod-card.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
+
     const addRodBtn = document.getElementById('addRodBtn');
     const rodModal = document.getElementById('createRodModal');
     const rodCancel = document.getElementById('cancelModalBtn');
@@ -13,6 +14,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const sessionId = localStorage.getItem('sessionId');
     const fishingSessionId = localStorage.getItem('currentFishingSessionId');
+
+    //const closeBtn = document.getElementById('closeSession');
+
+    const closeSessionButton = document.getElementById('closeSession');
+    const uploadPhotoModal = document.getElementById('uploadPhotoModal');
+    const closeUploadModal = document.getElementById('closeUploadModal');
+    const photoInput = document.getElementById('photoInput');
+    const photoPreviewContainer = document.getElementById('photoPreviewContainer');
+    const uploadPhotosButton = document.getElementById('uploadPhotosButton');
+    const finishSessionButton = document.getElementById('finishSessionButton');
 
     if(sessionNameLabel) {
         const sessionName = localStorage.getItem('currentFishingSessionName') || '';
@@ -96,4 +107,87 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.location.href = 'index.html';
         });
     }
+
+
+    async function getCurrentFishingSession() {
+        const resp = await apiFetch('/fishing-session/current', { headers: { sessionId } });
+        if (resp.status === 200) {
+          const data = await resp.json();
+          localStorage.setItem('currentFishingSessionId', data.id);
+          localStorage.setItem('currentFishingSessionName', data.name);
+          return data;
+        }
+        localStorage.removeItem('currentFishingSessionId');
+        localStorage.removeItem('currentFishingSessionName');
+        return null;
+    }
+
+    // Open the upload photo modal
+    closeSessionButton.addEventListener('click', () => {
+      uploadPhotoModal.style.display = 'block';
+    });
+
+    // Close the upload photo modal
+    closeUploadModal.addEventListener('click', () => {
+      uploadPhotoModal.style.display = 'none';
+    });
+
+    // Preview selected photos
+    // Limiter le nombre de photos à 5
+    const MAX_PHOTOS = 5;
+
+    photoInput.addEventListener('change', () => {
+        if (photoInput.files.length > MAX_PHOTOS) {
+            alert(`Vous ne pouvez uploader que ${MAX_PHOTOS} photos à la fois.`);
+            photoInput.value = ''; // Réinitialiser l'input
+            return;
+        }
+
+        photoPreviewContainer.innerHTML = '';
+        Array.from(photoInput.files).forEach(file => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '100px';
+                img.style.margin = '5px';
+                photoPreviewContainer.appendChild(img);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+
+    uploadPhotosButton.addEventListener('click', async () => {
+      const formData = new FormData();
+      Array.from(photoInput.files).forEach(file => {
+        formData.append('photos', file);
+      });
+
+      try {
+        const response = await fetch(`/api/fishing-session/${fishingSessionId}/photos`, {
+          method: 'POST',
+          body: formData
+        });
+
+        if (response.ok) {
+          alert('Photos uploadées avec succès !');
+        } else {
+          alert('Échec de l\'upload des photos.');
+        }
+      } catch (error) {
+        console.error('Erreur lors de l\'upload :', error);
+        alert('Une erreur est survenue.');
+      }
+    });
+
+    // Finish session after uploading photos
+    finishSessionButton.addEventListener('click', async () => {
+      await apiFetch('/fishing-session/close', {
+                    method: 'POST',
+                    headers: { sessionId },
+                  });
+                    localStorage.removeItem('currentFishingSessionId');
+                    localStorage.removeItem('currentFishingSessionName');
+                  window.location.href = 'home.html';
+    });
 });

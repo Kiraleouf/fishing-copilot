@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface FishRepository : JpaRepository<Fish, Int> {
     fun findTopByFishingRodIdOrderByCaughtAtDesc(fishingRodId: Int): Fish?
     fun countByFishingRodId(fishingRodId: Int): Int
+    fun findByFishingRodIdIn(fishingRodIds: List<Int>): List<Fish>
 }

@@ -76,4 +76,60 @@
   transform: translateY(1px);
   box-shadow: 0 0 12px rgba(176, 33, 88, 0.3);
 }
-s
+
+/* Mise à jour des styles pour la modale d'upload afin de correspondre à la modale d'ajout de canne */
+#uploadPhotoModal {
+  display: none; /* Masquer la modale par défaut */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.65); /* Fond semi-transparent */
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+}
+
+#uploadPhotoModal.active {
+  display: flex;
+  justify-content: center;
+  align-items: center; /* Centrer verticalement */
+  padding: 0; /* Supprimer le padding qui causait le décalage */
+}
+
+#uploadPhotoModal .modal-content {
+  background: rgba(0, 0, 0, 0.85); /* Fond sombre pour correspondre au thème */
+  color: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  margin-top: var(--header-h, 64px); /* Ajouter un espace pour éviter le chevauchement avec le header */
+}
+
+/* Style des boutons */
+#uploadPhotosButton, #finishSessionButton {
+  background: linear-gradient(135deg, #5a1735, #b02158); /* Style similaire au bouton Ajouter une canne */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 10px 5px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.25s ease;
+  box-shadow: 0 0 20px rgba(176, 33, 88, 0.3);
+}
+
+#uploadPhotosButton:hover, #finishSessionButton:hover {
+  background: linear-gradient(135deg, #6b1c40, #c72763);
+  box-shadow: 0 0 30px rgba(176, 33, 88, 0.5);
+  transform: translateY(-2px);
+}
+
+#uploadPhotosButton:active, #finishSessionButton:active {
+  transform: translateY(1px);
+  box-shadow: 0 0 12px rgba(176, 33, 88, 0.3);
+}
