@@ -99,6 +99,72 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Erreur lors du chargement des données de la session :', error);
     }
 
+    // Gestion du bouton de partage PDF
+    const shareButton = document.getElementById('shareButton');
+    if (shareButton) {
+        shareButton.addEventListener('click', async () => {
+            try {
+                // Changement du texte du bouton pendant le téléchargement
+                const originalText = shareButton.innerHTML;
+                shareButton.innerHTML = '📄 Génération du PDF...';
+                shareButton.disabled = true;
+
+                // Appel à l'endpoint PDF
+                const response = await fetch(`/fishing-session/${sessionId}/download-pdf`, {
+                    headers: {
+                        sessionId: localStorage.getItem('sessionId')
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Erreur lors de la génération du PDF');
+                }
+
+                // Récupération du blob PDF
+                const blob = await response.blob();
+
+                // Création d'un lien de téléchargement
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+
+                // Récupération du nom de fichier depuis les en-têtes de réponse
+                const contentDisposition = response.headers.get('Content-Disposition');
+                let filename = 'session_de_peche.pdf';
+                if (contentDisposition) {
+                    const matches = /filename="([^"]*)"/.exec(contentDisposition);
+                    if (matches && matches[1]) {
+                        filename = matches[1];
+                    }
+                }
+
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+
+                // Nettoyage
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+
+                // Restoration du bouton
+                shareButton.innerHTML = '✅ PDF téléchargé !';
+                setTimeout(() => {
+                    shareButton.innerHTML = originalText;
+                    shareButton.disabled = false;
+                }, 2000);
+
+            } catch (error) {
+                console.error('Erreur lors du téléchargement du PDF :', error);
+                shareButton.innerHTML = '❌ Erreur';
+                setTimeout(() => {
+                    shareButton.innerHTML = originalText;
+                    shareButton.disabled = false;
+                }, 2000);
+            }
+        });
+    }
+
     if (backToHomeButton) {
         backToHomeButton.addEventListener('click', () => {
             window.location.href = 'home.html';

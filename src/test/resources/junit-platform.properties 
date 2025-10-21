@@ -1,0 +1,10 @@
+# Répertoire des features (classpath)
+cucumber.features=classpath:features
+
+# Package contenant les steps
+cucumber.glue=steps
+
+# Rapport de sortie
+cucumber.plugin=pretty,summary
+
+cucumber.plugin=pretty,summary,junit:target/cucumber-reports/Cucumber.xml
