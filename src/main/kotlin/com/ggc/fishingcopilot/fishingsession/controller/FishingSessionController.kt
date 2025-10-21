@@ -7,7 +7,10 @@ import com.ggc.fishingcopilot.fishingsession.rod.FishingRodService
 import com.ggc.fishingcopilot.fishingsession.rod.model.dto.CreateRodRequest
 import com.ggc.fishingcopilot.fishingsession.rod.model.dto.RodResponse
 import com.ggc.fishingcopilot.fishingsession.service.FishingSessionService
+import com.ggc.fishingcopilot.fishingsession.service.PdfGenerationService
 import io.swagger.v3.oas.annotations.Operation
+import org.springframework.http.HttpHeaders
+import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import java.util.UUID
@@ -15,7 +18,8 @@ import java.util.UUID
 @RestController
 class FishingSessionController(
     private val fishingSessionService: FishingSessionService,
-    private val rodService: FishingRodService
+    private val rodService: FishingRodService,
+    private val pdfGenerationService: PdfGenerationService
 ) {
 
     @PostMapping("/fishing-session/create")
@@ -108,7 +112,6 @@ class FishingSessionController(
         return ResponseEntity.ok(resp)
     }
 
-    //add get to fetch a complete session by fishing session id
     @GetMapping("/fishing-session/{fishingSessionId}")
     @Operation(summary = "Get full fishing session", description = "Get complete details of a fishing session")
     fun getFullSession(
@@ -117,5 +120,22 @@ class FishingSessionController(
     ): ResponseEntity<Any> {
         val fullSession = fishingSessionService.getFullSession(sessionId, fishingSessionId)
         return ResponseEntity.ok(fullSession)
+    }
+
+    @GetMapping("/fishing-session/{sessionId}/download-pdf")
+    @Operation(summary = "Download fishing session PDF", description = "Generate and download the PDF report of the fishing session")
+    fun downloadPdf(
+        @RequestHeader("sessionId") sessionId: UUID,
+        @PathVariable("sessionId") fishingSessionId: Int
+    ): ResponseEntity<ByteArray> {
+        val fullSession = fishingSessionService.getFullSession(sessionId, fishingSessionId)
+        val pdfBytes = pdfGenerationService.generateSessionPdf(fullSession)
+        val headers = HttpHeaders().apply {
+            add("Content-Disposition", "attachment; filename=\"fishing_session_${fullSession.name.replace(" ", "_")}.pdf\"")
+        }
+        return ResponseEntity.ok()
+            .headers(headers)
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdfBytes)
     }
 }
