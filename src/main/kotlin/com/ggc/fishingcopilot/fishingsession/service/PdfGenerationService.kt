@@ -14,6 +14,7 @@ import com.itextpdf.layout.properties.UnitValue
 import com.itextpdf.layout.borders.Border
 import com.itextpdf.kernel.pdf.canvas.PdfCanvas
 import com.itextpdf.io.image.ImageDataFactory
+import com.itextpdf.layout.element.AreaBreak
 import org.springframework.stereotype.Service
 import java.io.ByteArrayOutputStream
 import java.net.URL
@@ -207,91 +208,107 @@ class PdfGenerationService {
         }
 
         // Section des photos
-        val photosContainer = Table(1)
-            .useAllAvailableWidth()
-            .setBorder(Border.NO_BORDER)
-            .setMarginBottom(20.0F)
-
         if (fullSession.pictures.isNotEmpty()) {
-            val photosContent = Paragraph()
-                .add("📸 Photos de la session (${fullSession.pictures.size})\n\n")
-                .setFontSize(12.0F)
-                .setFontColor(lightText)
+            // Force un saut de page pour la section photos
+            document.add(AreaBreak())
 
-            photosContainer.addCell(
-                Cell()
-                    .add(photosContent)
-                    .setBackgroundColor(cardBackground)
-                    .setBorder(Border.NO_BORDER)
-                    .setPadding(15.0F)
+            // Ajoute le fond sombre à la nouvelle page
+            val canvas = PdfCanvas(document.pdfDocument.getPage(document.pdfDocument.numberOfPages))
+            val pageSize = document.pdfDocument.getPage(document.pdfDocument.numberOfPages).pageSize
+            canvas.setFillColor(darkBackground)
+            canvas.rectangle(
+                pageSize.getLeft().toDouble(),
+                pageSize.getBottom().toDouble(),
+                pageSize.getWidth().toDouble(),
+                pageSize.getHeight().toDouble()
+            )
+            canvas.fill()
+
+            // Titre de la section photos
+            document.add(
+                Paragraph("📸 Photos de la session (${fullSession.pictures.size})")
+                    .setFontSize(18f)
+                    .setBold()
+                    .setFontColor(accentColor)
+                    .setMarginBottom(20f)
             )
 
-            // Création d'une grille pour les photos (2 colonnes)
-            val photoGrid = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
-                .useAllAvailableWidth()
-                .setBorder(Border.NO_BORDER)
-                .setMarginTop(10.0F)
+            // Groupe les photos par 6 (pour avoir 6 photos par page)
+            val photoGroups = fullSession.pictures.chunked(6)
 
-            fullSession.pictures.forEach { picture ->
-                try {
-                    val baseUrl = getBaseUrl()
-                    val imageUrl = URL("$baseUrl/photos/${picture.imgPath}")
-                    val image = Image(ImageDataFactory.create(imageUrl))
-                        .setAutoScale(true)
-                        .setMaxWidth(250f)
-                        .setMaxHeight(250f)
+            photoGroups.forEachIndexed { groupIndex, group ->
+                if (groupIndex > 0) {
+                    // Ajoute une nouvelle page pour chaque nouveau groupe de 6 photos
+                    document.add(AreaBreak())
+                    // Ajoute le fond sombre à la nouvelle page
+                    val newCanvas = PdfCanvas(document.pdfDocument.getPage(document.pdfDocument.numberOfPages))
+                    newCanvas.setFillColor(darkBackground)
+                    newCanvas.rectangle(
+                        pageSize.getLeft().toDouble(),
+                        pageSize.getBottom().toDouble(),
+                        pageSize.getWidth().toDouble(),
+                        pageSize.getHeight().toDouble()
+                    )
+                    newCanvas.fill()
+                }
 
-                    val cell = Cell()
-                        .add(image)
+                // Crée des paires de photos pour avoir 2 photos par ligne
+                val photoPairs = group.chunked(2)
+
+                photoPairs.forEach { pair ->
+                    val photoRow = Table(UnitValue.createPercentArray(floatArrayOf(50f, 50f)))
+                        .useAllAvailableWidth()
                         .setBorder(Border.NO_BORDER)
-                        .setPadding(5.0F)
-                        .setBackgroundColor(cardBackground)
+                        .setMarginTop(10.0F)
 
-                    photoGrid.addCell(cell)
-                } catch (e: Exception) {
-                    val errorCell = Cell()
-                        .add(
-                            Paragraph("Impossible de charger l'image: ${picture.imgPath}")
-                                .setFontColor(lightText)
-                                .setFontSize(10.0F)
+                    pair.forEach { picture ->
+                        try {
+                            val baseUrl = getBaseUrl()
+                            val imageUrl = URL("$baseUrl/photos/${picture.imgPath}")
+                            val image = Image(ImageDataFactory.create(imageUrl))
+                                .setAutoScale(true)
+                                .scaleToFit(180f, 180f)  // Redimensionne en préservant le ratio
+                                .setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER)
+
+                            val cell = Cell()
+                                .add(image)
+                                .setBorder(Border.NO_BORDER)
+                                .setMinHeight(190f)
+                                .setMaxHeight(190f)// Hauteur minimale pour assurer un espacement uniforme
+                                .setPadding(5.0F)
+                                .setBackgroundColor(cardBackground)
+                                .setVerticalAlignment(com.itextpdf.layout.properties.VerticalAlignment.MIDDLE)
+                                .setHorizontalAlignment(com.itextpdf.layout.properties.HorizontalAlignment.CENTER)
+
+                            photoRow.addCell(cell)
+                        } catch (e: Exception) {
+                            val errorCell = Cell()
+                                .add(
+                                    Paragraph("Impossible de charger l'image: ${picture.imgPath}")
+                                        .setFontColor(lightText)
+                                        .setFontSize(10.0F)
+                                )
+                                .setBorder(Border.NO_BORDER)
+                                .setPadding(5.0F)
+                                .setBackgroundColor(cardBackground)
+
+                            photoRow.addCell(errorCell)
+                        }
+                    }
+
+                    // Si la dernière ligne n'est pas complète, ajouter une cellule vide
+                    if (pair.size == 1) {
+                        photoRow.addCell(
+                            Cell()
+                                .setBorder(Border.NO_BORDER)
+                                .setPadding(5.0F)
                         )
-                        .setBorder(Border.NO_BORDER)
-                        .setPadding(5.0F)
-                        .setBackgroundColor(cardBackground)
+                    }
 
-                    photoGrid.addCell(errorCell)
+                    document.add(photoRow)
                 }
             }
-
-            // Si le nombre de photos est impair, ajouter une cellule vide pour maintenir la grille
-            if (fullSession.pictures.size % 2 != 0) {
-                photoGrid.addCell(
-                    Cell()
-                        .setBorder(Border.NO_BORDER)
-                        .setPadding(5.0F)
-                )
-            }
-
-            photosContainer.addCell(
-                Cell()
-                    .add(photoGrid)
-                    .setBorder(Border.NO_BORDER)
-                    .setPadding(0f)
-            )
-        } else {
-            val noPhotosCell = Cell().add(
-                Paragraph("📸 Aucune photo n'a été prise lors de cette session.")
-                    .setFontSize(12.0F)
-                    .setFontColor(lightText)
-            )
-                .setBackgroundColor(cardBackground)
-                .setBorder(Border.NO_BORDER)
-                .setPadding(15.0F)
-
-            photosContainer.addCell(noPhotosCell)
         }
-
-        document.add(photosContainer)
 
         // Pied de page
         val footer = Paragraph("\n🎣 Généré par Fishing Copilot - ${java.time.LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy à HH:mm"))}")
