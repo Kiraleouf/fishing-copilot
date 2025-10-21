@@ -145,26 +145,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>3.3.0</version>
-				<configuration>
-					<includes>
-						<include>**/*Test.java</include>
-						<include>**/*Tests.java</include>
-					</includes>
-					<systemPropertyVariables>
-						<spring.profiles.active>test</spring.profiles.active>
-					</systemPropertyVariables>
-					<useModulePath>false</useModulePath>
-					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
-					<systemPropertyVariables>
-						<!-- Active les logs et le reporting JUnit pour Cucumber -->
-						<cucumber.plugin>pretty,summary,junit:target/cucumber-reports/Cucumber.xml</cucumber.plugin>
-					</systemPropertyVariables>
-				</configuration>
-			</plugin>
-			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
 				<configuration>
@@ -194,6 +174,24 @@
 						<version>${kotlin.version}</version>
 					</dependency>
 				</dependencies>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.3.0</version>
+				<configuration>
+					<includes>
+						<include>**/*Test.java</include>
+						<include>**/*Tests.java</include>
+					</includes>
+					<systemPropertyVariables>
+						<spring.profiles.active>test</spring.profiles.active>
+						<cucumber.plugin>pretty,summary,junit:target/cucumber-reports/Cucumber.xml</cucumber.plugin>
+					</systemPropertyVariables>
+					<useModulePath>false</useModulePath>
+					<reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
